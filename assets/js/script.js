@@ -32,4 +32,3 @@ fetch(requestURL)
     console.log("Planet name: " + data[0][0] + "   rise time: " + data[0][1]
     + "   set time: " + data[0][2]);
 
-
