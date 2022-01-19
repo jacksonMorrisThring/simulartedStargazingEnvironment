@@ -63,5 +63,29 @@ fetch(requestURL)
         console.log("num_array1 takes value: " + num_array1);
         console.log("num_array2 takes value: " + num_array2);
 
+        var resultrt=0;
+	    var resultft=0;
+
+
+	    //Conversion from array of integers, to single integers 
+        //that quantitatively represent the time. Below if statement 
+        //handles case where fall time is next day, as that will stuff
+        //up the interval
+	    for (var k = 0; k < 4 ; ++k)
+	    {
+		    resultrt = resultrt + (num_array1[k])*(1000/((10 ** k)));
+		    resultft = resultft + (num_array2[k])*(1000/((10 ** k)));
+	    }
+
+        console.log("rise time is " + resultrt);
+        console.log("fall time is " + resultft);
+
+        //This part is for later once we have user input
+        // if (resultft<resultrt)
+		// {
+		// 	resultft = resultft + 2400;
+		// }
+
     }
+
     
