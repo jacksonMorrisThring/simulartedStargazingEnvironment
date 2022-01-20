@@ -12,3 +12,30 @@ I WANT to be able to know if its the
 -> right weather
 SO THAT I can know if I can make an observation of a planet on a particular night
 ```
+## About The Project
+Users can find out what planets are visible, and available to view. UI allows users to type in a planet. Weather and planet visibility is checked to ensure visibility. DARK/LIGHT mode for when your out in the field at night
+
+### Built with:
+This section should list any major frameworks/libraries used to bootstrap your project. List APIs used
+
+## Getting Started
+This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps
+
+### Instructions:
+* Navigate to planet you want to observe
+* program checks planets availability (rise/fall time + seasonal availability)
+* program checks weather
+* if all of the above passes, will list as available. Otherwise it will display and appropriate error message
+
+## Usage
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources
+
+## Credits
+
+* Gan Hong
+
+* Angelika Amor 
+
+* Matthew Durflinger 
+
+* Jackson Morris-Thring
