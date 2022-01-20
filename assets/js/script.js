@@ -35,16 +35,21 @@ function handleTime() {
     for (let i = 0; i < 7; i++) {
         var Frise_time = data[i][1];
         var Ffall_time = data[i][2];
+        //var Fcurrent_time = ... brought in from HTML
+
+
         console.log("Frise_time takes value: " + Frise_time);
         console.log("Ffall_time takes value: " + Ffall_time);
 
         //arrays that each digit will be copied into individually
         var num_array1 = [];
         var num_array2 = [];
+        //var num_array3 = [];
 
         //counters used to not count on the semi-colon index of the strings
         var counter1 = 0;
         var counter2 = 0;
+        //var counter3 = 0;
 
         //for loop removes : and puts each number as its own index in an
         //array
@@ -57,6 +62,10 @@ function handleTime() {
                 num_array2[counter2] = Ffall_time.at(j);
                 counter2++;
             }
+            // if (Fcurrent_time.at(j) != ':') {
+            //     num_array3[counter3] = Fcurrent_time.at(j);
+            //     counter3++;
+            // }
         }
 
         //logs the arrays in console
@@ -65,6 +74,7 @@ function handleTime() {
 
         var resultrt = 0;
         var resultft = 0;
+        //var resultct = 0;
 
 
         //Conversion from array of integers, to single integers 
@@ -74,10 +84,12 @@ function handleTime() {
         for (var k = 0; k < 4; ++k) {
             resultrt = resultrt + (num_array1[k]) * (1000 / ((10 ** k)));
             resultft = resultft + (num_array2[k]) * (1000 / ((10 ** k)));
+            //resultct = resultct + (num_array3[k]) * (1000 / ((10 ** k)));
         }
 
         console.log("rise time is " + resultrt);
         console.log("fall time is " + resultft);
+        //console.log("current time is " + resultct);
 
         //This part is for later once we have user input
         // if (resultft<resultrt)
