@@ -1,3 +1,6 @@
+
+
+
 //search for date and city
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
@@ -60,10 +63,54 @@ const citySearchChangeHandler = event => {
     event.preventDefault();
     selectedCity = citySearch.value;
     cityWeatherSearch(selectedCity);
+
+    //update pages
+    updateTodayWeather();
+    updateWeeklyWeather();
 };
+
+//planet change handler
+const planetChangeHandler = () => {
+    //get planet
+
+    //set planet
+
+    //calculate rise and fall time for today,
+    updateTodayPlanet();
+    //and each day next week
+    updateWeeklyPlanet();
+}
+
+//update weather in today section
+//use weatherToday variable
+const updateTodayWeather = () => {
+
+};
+
+//update the weather for the week
+const updateWeeklyWeather = () => {
+    //use weather7Day variable
+    //update 7 day section
+};
+
+//update planet rise and fall today
+const updateTodayPlanet = () => {
+    //use planet functions to get rise and fall
+
+    //update page
+}
+
+const updateWeeklyPlanet = () => {
+    //use planet functions
+
+    //update rise and fall for each day of the week
+};
+
+
 
 const init = () => {
     searchForm.addEventListener('submit', citySearchChangeHandler);
+    //add in listener for planet change
 }
 
 window.addEventListener('load',init);
