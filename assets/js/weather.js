@@ -1,12 +1,13 @@
-
-
-
 //search for date and city
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
 let selectedCity;
 let weatherToday, weather7Day;
 
+const nextBtn = document.querySelector('#planet-next');
+const prevBtn = document.querySelector('#planet-prev');
+
+let selectedPlanet = 0;
 
 
 
@@ -70,7 +71,7 @@ const citySearchChangeHandler = event => {
 };
 
 //planet change handler
-const planetChangeHandler = () => {
+const planetChangeHandler = planet => {
     //get planet
 
     //set planet
@@ -107,8 +108,64 @@ const updateWeeklyPlanet = () => {
 };
 
 
+//planet selector
+const planetImages = [
+    './assets/images/planets/1-Mercury.png',
+    './assets/images/planets/2-Venus.png',
+    './assets/images/planets/3-Earth.png',
+    './assets/images/planets/4-Mars.png',
+    './assets/images/planets/5-Jupiter.png',
+    './assets/images/planets/6-Saturn.png',
+    './assets/images/planets/7-Uranus.png',
+    './assets/images/planets/8-Neptune.png',
+]
+
+const planets = {
+    0 : 'Mercury',
+    1 : 'Venus',
+    2 : 'Earth',
+    3 : 'Mars',
+    4 : 'Jupiter',
+    5 : 'Saturn',
+    6 : 'Uranus',
+    7 : 'Neptune'
+}
+
+const prevPlanetImg = document.querySelector('#prev-planet-img');
+const currentPlanetImg = document.querySelector('#current-planet-img');
+const nextPlanetImg = document.querySelector('#next-planet-img');
+
+const nextPlanet = () => {
+
+    selectedPlanet = (selectedPlanet + 1) % 8;
+
+    let previousPlanet, nextPlanet;
+    selectedPlanet === 0 ? previousPlanet = 7 : previousPlanet = selectedPlanet - 1;
+    nextPlanet = (selectedPlanet + 1) % 8;
+    
+    prevPlanetImg.setAttribute('src', planetImages[previousPlanet]);
+    currentPlanetImg.setAttribute('src', planetImages[selectedPlanet]);
+    nextPlanetImg.setAttribute('src', planetImages[nextPlanet]);
+}
+
+const prevPlanet = () => {
+
+    selectedPlanet === 0 ? selectedPlanet = 7 : selectedPlanet--;
+    
+    let previousPlanet, nextPlanet;
+    selectedPlanet === 0 ? previousPlanet = 7 : previousPlanet = selectedPlanet - 1;
+    nextPlanet = (selectedPlanet + 1) % 8;
+
+    prevPlanetImg.setAttribute('src', planetImages[previousPlanet]);
+    currentPlanetImg.setAttribute('src', planetImages[selectedPlanet]);
+    nextPlanetImg.setAttribute('src', planetImages[nextPlanet]);
+}
+
+
 
 const init = () => {
+    nextBtn.addEventListener('click', nextPlanet);
+    prevBtn.addEventListener('click', prevPlanet);
     searchForm.addEventListener('submit', citySearchChangeHandler);
     //add in listener for planet change
 }

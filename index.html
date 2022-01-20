@@ -24,7 +24,20 @@
         </section>
 
         <!-- Planet Selector -->
-        <section class="planet-select-container">
+        <section class="planet-select-container flex">
+            <button value="prev" id="planet-prev">Prev</button>
+            <div class="planets flex items-center justify-between">
+                <div class="prev-planet h-3/5 text-center">
+                    <img src="./assets/images/planets/2-Venus.png" alt="" id="prev-planet-img" class="h-full m-auto">
+                </div>
+                <div class="current-planet">
+                    <img src="./assets/images/planets/3-Earth.png" alt="" id="current-planet-img">
+                </div>
+                <div class="next-planet h-3/5 text-center">
+                    <img src="./assets/images/planets/4-Mars.png" alt="" id="next-planet-img" class="h-full m-auto">
+                </div>
+            </div>
+            <button value="next" id="planet-next">Next</button>
 
         </section>
 
