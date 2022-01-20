@@ -1,5 +1,3 @@
-## README 📖
-
 # Simulated Stargazing Environment
 This website will use weather and solar system server-side apis to access and display planet positions for star gazing.
 
@@ -41,6 +39,3 @@ Use this space to show useful examples of how a project can be used. Additional 
 * Matthew Durflinger 
 
 * Jackson Morris-Thring
-
-
-
