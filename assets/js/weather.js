@@ -1,3 +1,4 @@
+
 //search for date and city
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
@@ -76,7 +77,7 @@ const planetChangeHandler = planet => {
     selectedPlanet = planets[planet];
 
     //calculate rise and fall time for today,
-    updateTodayPlanet();
+    updateTodayPlanet(selectedPlanet);
     //and each day next week
     updateWeeklyPlanet();
 }
@@ -94,11 +95,24 @@ const updateWeeklyWeather = () => {
 };
 
 //update planet rise and fall today
-const updateTodayPlanet = () => {
+const updateTodayPlanet = (planet) => {
     //use planet functions to get rise and fall
-
+    const date = new Date();
+    let height = getHeight();
+    let observer = new Astronomy.Observer(-34.9333, 138.6, height);
+    let result = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
+    console.log(result);
     //update page
 }
+
+//This function will be used to get the height at certain coordinates
+//however this fetch will require some keys for a google api which are unsafe to chuck around during development
+//so for now it is just hardcoded, should be fine
+const getHeight = () => {
+    return 59;
+};
+
+getHeight();
 
 const updateWeeklyPlanet = () => {
     //use planet functions
@@ -108,17 +122,6 @@ const updateWeeklyPlanet = () => {
 
 
 //planet selector
-const planetImages = [
-    './assets/images/planets/1-Mercury.png',
-    './assets/images/planets/2-Venus.png',
-    './assets/images/planets/3-Earth.png',
-    './assets/images/planets/4-Mars.png',
-    './assets/images/planets/5-Jupiter.png',
-    './assets/images/planets/6-Saturn.png',
-    './assets/images/planets/7-Uranus.png',
-    './assets/images/planets/8-Neptune.png',
-]
-
 const planets = {
     0 : 'Mercury',
     1 : 'Venus',
