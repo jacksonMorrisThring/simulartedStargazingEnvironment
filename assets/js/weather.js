@@ -1,12 +1,13 @@
-
-
-
 //search for date and city
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
 let selectedCity;
 let weatherToday, weather7Day;
 
+const nextBtn = document.querySelector('#planet-next');
+const prevBtn = document.querySelector('#planet-prev');
+
+let selectedPlanet = 0;
 
 
 
@@ -70,10 +71,9 @@ const citySearchChangeHandler = event => {
 };
 
 //planet change handler
-const planetChangeHandler = () => {
-    //get planet
-
+const planetChangeHandler = planet => {
     //set planet
+    selectedPlanet = planets[planet];
 
     //calculate rise and fall time for today,
     updateTodayPlanet();
@@ -107,6 +107,38 @@ const updateWeeklyPlanet = () => {
 };
 
 
+//planet selector
+const planetImages = [
+    './assets/images/planets/1-Mercury.png',
+    './assets/images/planets/2-Venus.png',
+    './assets/images/planets/3-Earth.png',
+    './assets/images/planets/4-Mars.png',
+    './assets/images/planets/5-Jupiter.png',
+    './assets/images/planets/6-Saturn.png',
+    './assets/images/planets/7-Uranus.png',
+    './assets/images/planets/8-Neptune.png',
+]
+
+const planets = {
+    0 : 'Mercury',
+    1 : 'Venus',
+    2 : 'Mars',
+    3 : 'Jupiter',
+    4 : 'Saturn',
+    5 : 'Uranus',
+    6 : 'Neptune'
+}
+
+var flkty = new Flickity( '.main-carousel', {
+    // options
+    wrapAround: true,
+    adaptiveHeight: true,
+    on: {
+        change: (index) => {
+            planetChangeHandler(index);
+        },
+    },
+  });
 
 const init = () => {
     searchForm.addEventListener('submit', citySearchChangeHandler);
