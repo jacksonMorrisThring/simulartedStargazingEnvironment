@@ -72,9 +72,8 @@ const citySearchChangeHandler = event => {
 
 //planet change handler
 const planetChangeHandler = planet => {
-    //get planet
-
     //set planet
+    selectedPlanet = planets[planet];
 
     //calculate rise and fall time for today,
     updateTodayPlanet();
@@ -123,49 +122,25 @@ const planetImages = [
 const planets = {
     0 : 'Mercury',
     1 : 'Venus',
-    2 : 'Earth',
-    3 : 'Mars',
-    4 : 'Jupiter',
-    5 : 'Saturn',
-    6 : 'Uranus',
-    7 : 'Neptune'
+    2 : 'Mars',
+    3 : 'Jupiter',
+    4 : 'Saturn',
+    5 : 'Uranus',
+    6 : 'Neptune'
 }
 
-const prevPlanetImg = document.querySelector('#prev-planet-img');
-const currentPlanetImg = document.querySelector('#current-planet-img');
-const nextPlanetImg = document.querySelector('#next-planet-img');
-
-const nextPlanet = () => {
-
-    selectedPlanet = (selectedPlanet + 1) % 8;
-
-    let previousPlanet, nextPlanet;
-    selectedPlanet === 0 ? previousPlanet = 7 : previousPlanet = selectedPlanet - 1;
-    nextPlanet = (selectedPlanet + 1) % 8;
-    
-    prevPlanetImg.setAttribute('src', planetImages[previousPlanet]);
-    currentPlanetImg.setAttribute('src', planetImages[selectedPlanet]);
-    nextPlanetImg.setAttribute('src', planetImages[nextPlanet]);
-}
-
-const prevPlanet = () => {
-
-    selectedPlanet === 0 ? selectedPlanet = 7 : selectedPlanet--;
-    
-    let previousPlanet, nextPlanet;
-    selectedPlanet === 0 ? previousPlanet = 7 : previousPlanet = selectedPlanet - 1;
-    nextPlanet = (selectedPlanet + 1) % 8;
-
-    prevPlanetImg.setAttribute('src', planetImages[previousPlanet]);
-    currentPlanetImg.setAttribute('src', planetImages[selectedPlanet]);
-    nextPlanetImg.setAttribute('src', planetImages[nextPlanet]);
-}
-
-
+var flkty = new Flickity( '.main-carousel', {
+    // options
+    wrapAround: true,
+    adaptiveHeight: true,
+    on: {
+        change: (index) => {
+            planetChangeHandler(index);
+        },
+    },
+  });
 
 const init = () => {
-    nextBtn.addEventListener('click', nextPlanet);
-    prevBtn.addEventListener('click', prevPlanet);
     searchForm.addEventListener('submit', citySearchChangeHandler);
     //add in listener for planet change
 }

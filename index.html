@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <link rel="stylesheet" href="./assets/css/output.css">
+
     <title>Planet forcast</title>
 </head>
 <body>
@@ -24,21 +27,17 @@
         </section>
 
         <!-- Planet Selector -->
-        <section class="planet-select-container flex">
-            <button value="prev" id="planet-prev">Prev</button>
-            <div class="planets flex items-center justify-between">
-                <div class="prev-planet h-3/5 text-center">
-                    <img src="./assets/images/planets/2-Venus.png" alt="" id="prev-planet-img" class="h-full m-auto">
-                </div>
-                <div class="current-planet">
-                    <img src="./assets/images/planets/3-Earth.png" alt="" id="current-planet-img">
-                </div>
-                <div class="next-planet h-3/5 text-center">
-                    <img src="./assets/images/planets/4-Mars.png" alt="" id="next-planet-img" class="h-full m-auto">
-                </div>
+        <section class="planet-select-container">
+            <div class="main-carousel w-full m-auto">
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/1-Mercury.png" alt="venus" class="m-auto"></div>
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/2-Venus.png" alt="venus" class="m-auto"></div>
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/4-Mars.png" alt="venus" class="m-auto"></div>
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/5-jupiter.png" alt="venus" class="m-auto"></div>
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/6-saturn.png" alt="venus" class="m-auto"></div>
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/7-Uranus.png" alt="venus" class="m-auto"></div>
+                <div class="carousel-cell w-full md:w-1/3"><img src="./assets/images/planets/8-Neptune.png" alt="venus" class="m-auto"></div>
             </div>
-            <button value="next" id="planet-next">Next</button>
-
+              
         </section>
 
         <!-- Today's Results -->
@@ -61,7 +60,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script> 
     <script src = './assets/js/weather.js'></script>
 </body>
 </html>
