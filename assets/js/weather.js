@@ -1,16 +1,37 @@
 
-//search for date and city
+//date and city variables ----------------------------------------//
+
+//form elements
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
-let selectedCity;
-let weatherToday, weather7Day;
 
-const nextBtn = document.querySelector('#planet-next');
-const prevBtn = document.querySelector('#planet-prev');
+//global value holders
+let selectedCity = null; //user selected city
+let cityLat = null;
+let cityLng = null;
+let weatherToday, weather7Day; //weather data holders
+
+
+//planet variables ----------------------------------------------//
+
+const planets = {
+    0 : 'Mercury',
+    1 : 'Venus',
+    2 : 'Mars',
+    3 : 'Jupiter',
+    4 : 'Saturn',
+    5 : 'Uranus',
+    6 : 'Neptune'
+}
 
 let selectedPlanet = 0;
 
+//today Planet set and rise text
+const riseTimeText = document.querySelector('#rise-time');
+const setTimeText = document.querySelector('#set-time');
 
+
+//-------------------------------------- Weather API --------------------------------------------------------------------//
 
 //prepare data for longitude and latitude api call when city is entered
 const cityWeatherSearch = (name) => {
@@ -25,10 +46,10 @@ const cityWeatherSearch = (name) => {
         }
     }).then(info => {
         //save name, longitude, and latitude from response
-        const lat = info.coord.lat;
-        const lng = info.coord.lon;
+        cityLat = info.coord.lat;
+        cityLng = info.coord.lon;
 
-        return [name, lat, lng];
+        return [name, cityLat, cityLng];
     }).then(info => {
         //call onecall api to get more detailed data
         getWeather(info[0], info[1], info[2]);
@@ -60,6 +81,96 @@ const getWeather = (name, lat, lng) => {
 //error handler for failed api fetch
 const weatherApiFetchErrorHandler = event => {};
 
+//update weather in today section
+//use weatherToday variable
+const updateTodayWeather = () => {
+
+};
+
+//update the weather for the week
+const updateWeeklyWeather = () => {
+    //use weather7Day variable
+    //update 7 day section
+};
+
+
+//--------------------------------------------- Planet Functions ----------------------------------------//
+
+//update planet rise and fall today
+const updateTodayPlanet = (planet) => {
+
+    //get height of location coordinates
+    let height = getHeight();
+
+    //create new observer
+    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+
+    //get rise and set time
+    const visibleSpan = getRiseSet(planet, observer, new Date());
+
+    console.log(visibleSpan); //error handling, delete for production
+    
+    //update page
+    riseTimeText.innerText = visibleSpan.rise;
+    setTimeText.innerText = visibleSpan.set;
+}
+
+const updateWeeklyPlanet = planet => {
+    let riseSetTimes = [];
+
+    //get height of location coordinates
+    let height = getHeight();
+
+    //create new observer
+    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+
+    for(let i = 1; i <= 7; i++) {
+        let date = new Date();
+        date.setDate(date.getDate() + i);
+        riseSetTimes.push(getRiseSet(planet, observer, date));
+    }
+
+    return riseSetTimes;
+};
+
+//will get Rise and Set of a planet on a day for an observer
+const getRiseSet = (planet, observer, date) => {
+    let visible = false;
+    //set to start of day
+    date.setHours(0,0,0,0);
+
+    //get rise and set
+    let rise = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
+    let set = Astronomy.SearchRiseSet(planet, observer, -1, date ,1);
+
+    //if the set time is before the rise time, get the next set time
+    if(rise.date > set.date) {
+        date = rise.date;
+        set = Astronomy.SearchRiseSet(planet, observer, -1, date ,1);
+    }
+
+    //see if planet is currently visible
+    const dateNow = new Date();
+    if((rise.date < dateNow) && (dateNow < set.date)) {
+        visible = true;
+    }
+
+    //format string -> hh:mm AM/PM
+    rise = dayjs(rise.date).format('hh:mm A');
+    set = dayjs(set.date).format('hh:mm A');
+
+    return {rise: rise, set: set, visible: visible};
+}
+
+//This function will be used to get the height at certain coordinates
+//however this fetch will require some keys for a google api which are unsafe to chuck around during development
+//so for now it is just hardcoded, should be fine
+const getHeight = () => {
+    return 59;
+};
+
+//--------------------------------------- Form Handlers ---------------------------------------------------//
+
 //form submit handler 
 const citySearchChangeHandler = event => {
     event.preventDefault();
@@ -76,63 +187,19 @@ const planetChangeHandler = planet => {
     //set planet
     selectedPlanet = planets[planet];
 
+    if(selectedCity === null) {
+        console.log('please set location');
+        return;
+    }
+
     //calculate rise and fall time for today,
     updateTodayPlanet(selectedPlanet);
     //and each day next week
-    updateWeeklyPlanet();
+    updateWeeklyPlanet(selectedPlanet);
 }
 
-//update weather in today section
-//use weatherToday variable
-const updateTodayWeather = () => {
-
-};
-
-//update the weather for the week
-const updateWeeklyWeather = () => {
-    //use weather7Day variable
-    //update 7 day section
-};
-
-//update planet rise and fall today
-const updateTodayPlanet = (planet) => {
-    //use planet functions to get rise and fall
-    const date = new Date();
-    let height = getHeight();
-    let observer = new Astronomy.Observer(-34.9333, 138.6, height);
-    let result = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
-    console.log(result);
-    //update page
-}
-
-//This function will be used to get the height at certain coordinates
-//however this fetch will require some keys for a google api which are unsafe to chuck around during development
-//so for now it is just hardcoded, should be fine
-const getHeight = () => {
-    return 59;
-};
-
-getHeight();
-
-const updateWeeklyPlanet = () => {
-    //use planet functions
-
-    //update rise and fall for each day of the week
-};
-
-
-//planet selector
-const planets = {
-    0 : 'Mercury',
-    1 : 'Venus',
-    2 : 'Mars',
-    3 : 'Jupiter',
-    4 : 'Saturn',
-    5 : 'Uranus',
-    6 : 'Neptune'
-}
-
-var flkty = new Flickity( '.main-carousel', {
+//planet carousel
+var flkty = new Flickity(".main-carousel", {
     // options
     wrapAround: true,
     adaptiveHeight: true,
@@ -141,11 +208,12 @@ var flkty = new Flickity( '.main-carousel', {
             planetChangeHandler(index);
         },
     },
-  });
+});
 
+
+//page initialization
 const init = () => {
     searchForm.addEventListener('submit', citySearchChangeHandler);
-    //add in listener for planet change
 }
 
 window.addEventListener('load',init);
