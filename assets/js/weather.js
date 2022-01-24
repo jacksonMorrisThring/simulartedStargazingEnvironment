@@ -149,6 +149,7 @@ const getRiseSet = (planet, observer, date) => {
     let visible = false;
     //set to start of day
     date.setHours(0,0,0,0);
+    console.log(date);
 
     //get rise and set
     let rise = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
@@ -167,8 +168,8 @@ const getRiseSet = (planet, observer, date) => {
     }
 
     //format string -> hh:mm AM/PM
-    rise = dayjs(rise.date).tz(timezone).format('hh:mm A dd');
-    set = dayjs(set.date).tz(timezone).format('hh:mm A dd');
+    rise = dayjs(rise.date).format('hh:mm A dd');
+    set = dayjs(set.date).format('hh:mm A dd');
 
     return {rise: rise, set: set, visible: visible};
 }
@@ -211,7 +212,7 @@ const planetChangeHandler = planet => {
     //calculate rise and fall time for today,
     updateTodayPlanet(selectedPlanet);
     //and each day next week
-    updateWeeklyPlanet(selectedPlanet);
+    //updateWeeklyPlanet(selectedPlanet);
 }
 
 //planet carousel
