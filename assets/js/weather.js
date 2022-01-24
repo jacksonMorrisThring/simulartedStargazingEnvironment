@@ -10,7 +10,12 @@ let selectedCity = null; //user selected city
 let cityLat = null;
 let cityLng = null;
 let weatherToday, weather7Day; //weather data holders
+let timezone;
+let offset;
+let riseSetTimes = [];
 
+dayjs.extend(window.dayjs_plugin_utc);
+dayjs.extend(window.dayjs_plugin_timezone);
 
 //planet variables ----------------------------------------------//
 
@@ -73,6 +78,8 @@ const getWeather = (name, lat, lng) => {
             console.log(info);
             weatherToday = info.current;
             weather7Day = info.daily;
+            timezone = info.timezone;
+            offset = info.timezone_offset;
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
@@ -105,8 +112,11 @@ const updateTodayPlanet = (planet) => {
     //create new observer
     let observer = new Astronomy.Observer(cityLat, cityLng, height);
 
+    let date = new Date();
+    let newDate = getOffsetDate(date);
+
     //get rise and set time
-    const visibleSpan = getRiseSet(planet, observer, new Date());
+    const visibleSpan = getRiseSet(planet, observer, newDate);
 
     console.log(visibleSpan); //error handling, delete for production
     
@@ -116,7 +126,7 @@ const updateTodayPlanet = (planet) => {
 }
 
 const updateWeeklyPlanet = planet => {
-    let riseSetTimes = [];
+    riseSetTimes = [];
 
     //get height of location coordinates
     let height = getHeight();
@@ -126,11 +136,12 @@ const updateWeeklyPlanet = planet => {
 
     for(let i = 1; i <= 7; i++) {
         let date = new Date();
-        date.setDate(date.getDate() + i);
+        let newDate = getOffsetDate(date);
+        date.setDate(newDate.getDate() + i);
         riseSetTimes.push(getRiseSet(planet, observer, date));
     }
 
-    return riseSetTimes;
+    return;
 };
 
 //will get Rise and Set of a planet on a day for an observer
@@ -150,18 +161,23 @@ const getRiseSet = (planet, observer, date) => {
     }
 
     //see if planet is currently visible
-    const dateNow = new Date();
+    const dateNow = getOffsetDate(new Date());
     if((rise.date < dateNow) && (dateNow < set.date)) {
         visible = true;
     }
 
     //format string -> hh:mm AM/PM
-    rise = dayjs(rise.date).format('hh:mm A');
-    set = dayjs(set.date).format('hh:mm A');
+    rise = dayjs(rise.date).tz(timezone).format('hh:mm A dd');
+    set = dayjs(set.date).tz(timezone).format('hh:mm A dd');
 
     return {rise: rise, set: set, visible: visible};
 }
 
+const getOffsetDate = date => {
+    let newDate = dayjs(date).utc();
+    newDate = newDate.utcOffset(offset/60);
+    return newDate.$d;
+}
 //This function will be used to get the height at certain coordinates
 //however this fetch will require some keys for a google api which are unsafe to chuck around during development
 //so for now it is just hardcoded, should be fine
