@@ -80,6 +80,9 @@ const getWeather = (name, lat, lng) => {
             weather7Day = info.daily;
             timezone = info.timezone;
             offset = info.timezone_offset;
+
+            storeLocalUserPrefs('lat', lat);
+            storeLocalUserPrefs('lng', lng);
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
@@ -203,6 +206,7 @@ const citySearchChangeHandler = event => {
 const planetChangeHandler = planet => {
     //set planet
     selectedPlanet = planets[planet];
+    storeLocalUserPrefs('planet', selectedPlanet);
 
     if(selectedCity === null) {
         console.log('please set location');
@@ -226,6 +230,27 @@ var flkty = new Flickity(".main-carousel", {
         },
     },
 });
+
+//----------------------------------------------- Local Storage ------------------------------------------------//
+const storeLocalUserPrefs = (key, value) => {
+    //get from local storage
+    let local = getLocalUserPrefs();
+    //update keys
+    local[key] = value;
+    //store to local storage
+    local = JSON.stringify(local);
+    localStorage.setItem('userPrefs', local);
+};
+
+const getLocalUserPrefs = () => {
+    let local = JSON.parse(localStorage.getItem('userPrefs'));
+
+    if(local) {
+        return local;
+    }
+
+    return {lat: null, lng: null, height: null, planet: null};
+};
 
 
 //page initialization
