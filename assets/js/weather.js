@@ -104,6 +104,7 @@ const updateWeeklyWeather = () => {
 };
 
 
+
 //--------------------------------------------- Planet Functions ----------------------------------------//
 
 //update planet rise and fall today
