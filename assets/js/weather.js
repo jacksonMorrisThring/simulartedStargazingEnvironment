@@ -29,7 +29,8 @@ const planets = {
     6 : 'Neptune'
 }
 
-let selectedPlanet = 0;
+let selectedPlanet = 'Mercury';
+let planet_index = 0;
 
 //today Planet set and rise text
 const riseTimeText = document.querySelector('#rise-time');
@@ -58,6 +59,8 @@ const cityWeatherSearch = (name) => {
     }).then(info => {
         //call onecall api to get more detailed data
         getWeather(info[0], info[1], info[2]);
+        updateTodayPlanet(selectedPlanet);
+        updateWeeklyPlanet(selectedPlanet);
     }).catch(() => {
         weatherApiFetchErrorHandler();
     })
@@ -83,6 +86,7 @@ const getWeather = (name, lat, lng) => {
 
             storeLocalUserPrefs('lat', lat);
             storeLocalUserPrefs('lng', lng);
+            storeLocalUserPrefs('name', name);
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
@@ -138,9 +142,8 @@ const updateWeeklyPlanet = planet => {
     let observer = new Astronomy.Observer(cityLat, cityLng, height);
 
     for(let i = 1; i <= 7; i++) {
-        let date = new Date();
-        let newDate = getOffsetDate(date);
-        date.setDate(newDate.getDate() + i);
+        let date = getOffsetDate(new Date());
+        date.setDate(date.getDate() + i);
         riseSetTimes.push(getRiseSet(planet, observer, date));
     }
 
@@ -151,8 +154,7 @@ const updateWeeklyPlanet = planet => {
 const getRiseSet = (planet, observer, date) => {
     let visible = false;
     //set to start of day
-    date.setHours(0,0,0,0);
-    console.log(date);
+    date.setUTCHours(0);
 
     //get rise and set
     let rise = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
@@ -179,13 +181,14 @@ const getRiseSet = (planet, observer, date) => {
 
 const getOffsetDate = date => {
     let newDate = dayjs(date).utc();
-    newDate = newDate.utcOffset(offset/60);
+    newDate.utcOffset(offset/60);
     return newDate.$d;
 }
 //This function will be used to get the height at certain coordinates
 //however this fetch will require some keys for a google api which are unsafe to chuck around during development
 //so for now it is just hardcoded, should be fine
 const getHeight = () => {
+    storeLocalUserPrefs('height', 59);
     return 59;
 };
 
@@ -207,6 +210,7 @@ const planetChangeHandler = planet => {
     //set planet
     selectedPlanet = planets[planet];
     storeLocalUserPrefs('planet', selectedPlanet);
+    storeLocalUserPrefs('planet_index', planet);
 
     if(selectedCity === null) {
         console.log('please set location');
@@ -216,7 +220,7 @@ const planetChangeHandler = planet => {
     //calculate rise and fall time for today,
     updateTodayPlanet(selectedPlanet);
     //and each day next week
-    //updateWeeklyPlanet(selectedPlanet);
+    updateWeeklyPlanet(selectedPlanet);
 }
 
 //planet carousel
@@ -249,12 +253,35 @@ const getLocalUserPrefs = () => {
         return local;
     }
 
-    return {lat: null, lng: null, height: null, planet: null};
+    return {name: null, lat: null, lng: null, height: null, planet: null, planet_index: null};
+};
+
+const pageInit = () => {
+    let local = getLocalUserPrefs();
+
+    if(local['lat'] != null) {
+        selectedCity = local.name;
+        cityLat = local.lat;
+        cityLng = local.lng;
+        selectedPlanet = local.planet;
+        planet_index = local.planet_index;
+        flkty.select( planet_index );
+
+        cityWeatherSearch(selectedCity);
+
+        //update pages
+        updateTodayWeather();
+        updateWeeklyWeather();
+
+        updateTodayPlanet(selectedPlanet);
+        updateWeeklyPlanet(selectedPlanet);
+    }
 };
 
 
 //page initialization
 const init = () => {
+    pageInit();
     searchForm.addEventListener('submit', citySearchChangeHandler);
 }
 
