@@ -42,6 +42,19 @@ or credits can be added here
 ## Usage
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources
 
+## style
+We decided as a group to align our style of writing code. We decided ES6 styling for the body. We also decided to unify our commenting styling. For major sections, we will have styling in the form
+
+//----------------- Section header -----------------//
+
+For commenting on specific subsections, commenting will be done above the section and not to the side. E.g
+
+ //if the set time is before the rise time, get the next set time
+    if(rise.date > set.date) {
+        date = rise.date;
+        set = Astronomy.SearchRiseSet(planet, observer, -1, date ,1);
+    }
+
 ## Credits
 
 * Gan Hong
