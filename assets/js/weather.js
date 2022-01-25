@@ -82,6 +82,7 @@ const getWeather = (name, lat, lng) => {
             console.log(info);
             weatherToday = info.current;
             weather7Day = info.daily;
+            
             timezone = info.timezone;
             offset = info.timezone_offset;
 
@@ -99,13 +100,27 @@ const weatherApiFetchErrorHandler = event => {};
 //update weather in today section
 //use weatherToday variable
 const updateTodayWeather = () => {
-
+    console.log(weather7Day);
 };
 
 //update the weather for the week
 const updateWeeklyWeather = () => {
+    console.log(weather7Day);
     //use weather7Day variable
     //update 7 day section
+    var forecastbox = document.querySelector(".day-container");
+    //update 7 day section
+    for (let i=1; i<8; i++) {
+        forecastbox.innerHTML +=
+            `<div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm mx-10">
+                <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">${weather7Day[i].dt}</h5>
+                <div class="text-gray-700 text-base mb-4 w-28">Condition:${weather7Day[i].weather[0].main}</div>
+                <div class="text-gray-700 text-base mb-4 w-28">Hightemp:${weather7Day[i].temp.max}</div>
+                <div class="text-gray-700 text-base mb-4 w-28">Lowtemp:${weather7Day[i].temp.min}</div>
+                <div class="text-gray-700 text-base mb-4 w-28">Windspeed:${weather7Day[i].wind_speed}km/h</div>
+                <div class="text-gray-700 text-base mb-4 w-28">Humidity:${weather7Day[i].humidity}%</div>
+            </div>`;
+    }
 };
 
 
@@ -199,8 +214,7 @@ const setHeight = (lat, lng) => {
     .then( function(data){
 
         //assigning an object variable to the google data object containing elevation
-        var objectData = data.results[0]
-        console.log("returned data converted from object is: " + objectData.elevation);
+        var objectData = data.results[0];
         storeLocalUserPrefs('height', objectData.elevation);
         cityHeight = objectData.elevation;
     })
@@ -284,10 +298,6 @@ const pageInit = () => {
         flkty.select( planet_index );
 
         cityWeatherSearch(selectedCity);
-
-        //update pages
-        updateTodayWeather();
-        updateWeeklyWeather();
 
         updateTodayPlanet(selectedPlanet);
         updateWeeklyPlanet(selectedPlanet);
