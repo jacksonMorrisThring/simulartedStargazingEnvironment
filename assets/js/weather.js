@@ -41,13 +41,12 @@ const setTimeText = document.querySelector('#set-time');
 //-------------------------------------- Weather API --------------------------------------------------------------------//
 
 //prepare data for longitude and latitude api call when city is entered
-const cityWeatherSearch = (name) => {
+const cityWeatherSearch = name => {
 
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=cf0f236d99f05f78766736970398dfe2`;
 
     return fetch(url).then(response => {
-        if(response.ok) {
-            
+        if(response.ok) {  
             //get data
             return response.json();
         }
@@ -59,9 +58,8 @@ const cityWeatherSearch = (name) => {
         return [name, cityLat, cityLng];
     }).then(info => {
         //call onecall api to get more detailed data
+        console.log(info);
         getWeather(info[0], info[1], info[2]);
-        updateTodayPlanet(selectedPlanet);
-        updateWeeklyPlanet(selectedPlanet);
     }).catch(() => {
         weatherApiFetchErrorHandler();
     })
@@ -89,6 +87,13 @@ const getWeather = (name, lat, lng) => {
             storeLocalUserPrefs('lat', lat);
             storeLocalUserPrefs('lng', lng);
             storeLocalUserPrefs('name', name);
+            storeLocalUserPrefs('planet', selectedPlanet);
+            storeLocalUserPrefs('planet_index', planet_index);
+
+            updatePlanets(selectedPlanet, cityLat, cityLng);
+
+            updateTodayWeather();
+            updateWeeklyWeather();
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
@@ -127,11 +132,32 @@ const updateWeeklyWeather = () => {
 
 //--------------------------------------------- Planet Functions ----------------------------------------//
 
+const updatePlanets = (planet, lat, lng) => {
+    var fnRequestURL = "https://maps.googleapis.com/maps/api/elevation/json?locations="+lat+"%2C"+lng+"&key=AIzaSyBzLHUoT5HXQ28s19821jaSJxj1QBHXhpc";
+
+    fetch(fnRequestURL)
+    .then (function(response){
+        return response.json();
+    }).then( function(data){
+        //assigning an object variable to the google data object containing elevation
+        var objectData = data.results[0];
+        storeLocalUserPrefs('height', objectData.elevation);
+        cityHeight = objectData.elevation;
+        console.log()
+        return;
+    }).then(() => {
+        console.log('reached planets');
+        updateTodayPlanet(planet);
+        updateWeeklyPlanet(planet);
+    })
+
+};
+
+
 //update planet rise and fall today
 const updateTodayPlanet = (planet) => {
 
     //get height of location coordinates
-    setHeight(cityLat, cityLng);
     console.log(cityHeight);
     //create new observer
     let observer = new Astronomy.Observer(cityLat, cityLng, cityHeight);
@@ -143,7 +169,7 @@ const updateTodayPlanet = (planet) => {
     const visibleSpan = getRiseSet(planet, observer, newDate);
 
     console.log(visibleSpan); //error handling, delete for production
-    
+
     //update page
     riseTimeText.innerText = visibleSpan.rise;
     setTimeText.innerText = visibleSpan.set;
@@ -153,7 +179,6 @@ const updateWeeklyPlanet = planet => {
     riseSetTimes = [];
 
     //get height of location coordinates
-    setHeight(cityLat, cityLng);
 
     //create new observer
     let observer = new Astronomy.Observer(cityLat, cityLng, cityHeight);
@@ -205,21 +230,21 @@ const getOffsetDate = date => {
 //however this fetch will require some keys for a google api which are unsafe to chuck around during development
 //so for now it is just hardcoded, should be fine
 const setHeight = (lat, lng) => {
-    var fnRequestURL = "https://maps.googleapis.com/maps/api/elevation/json?locations="+lat+"%2C"+lng+"&key=AIzaSyBzLHUoT5HXQ28s19821jaSJxj1QBHXhpc";
+    // var fnRequestURL = "https://maps.googleapis.com/maps/api/elevation/json?locations="+lat+"%2C"+lng+"&key=AIzaSyBzLHUoT5HXQ28s19821jaSJxj1QBHXhpc";
 
-    fetch(fnRequestURL)
-    .then (function(response){
-        return response.json();
-    })
+    // fetch(fnRequestURL)
+    // .then (function(response){
+    //     return response.json();
+    // })
 
-    .then( function(data){
+    // .then( function(data){
 
-        //assigning an object variable to the google data object containing elevation
-        var objectData = data.results[0];
-        storeLocalUserPrefs('height', objectData.elevation);
-        cityHeight = objectData.elevation;
-    })
-
+    //     //assigning an object variable to the google data object containing elevation
+    //     var objectData = data.results[0];
+    //     storeLocalUserPrefs('height', objectData.elevation);
+    //     cityHeight = objectData.elevation;
+    // })
+    cityHeight = 59;
 };
 
 //--------------------------------------- Form Handlers ---------------------------------------------------//
@@ -229,10 +254,6 @@ const citySearchChangeHandler = event => {
     event.preventDefault();
     selectedCity = citySearch.value;
     cityWeatherSearch(selectedCity);
-
-    //update pages
-    updateTodayWeather();
-    updateWeeklyWeather();
 };
 
 //planet change handler
@@ -248,9 +269,8 @@ const planetChangeHandler = planet => {
     }
 
     //calculate rise and fall time for today,
-    updateTodayPlanet(selectedPlanet);
+    updatePlanets(selectedPlanet, cityLat, cityLng);
     //and each day next week
-    updateWeeklyPlanet(selectedPlanet);
 }
 
 //planet carousel
@@ -289,7 +309,8 @@ const getLocalUserPrefs = () => {
 const pageInit = () => {
     let local = getLocalUserPrefs();
 
-    if(local['lat'] != null) {
+    if((local['lat'] != null) && (local['planet'] != null)) {
+        console.log('fired');
         selectedCity = local.name;
         cityLat = local.lat;
         cityLng = local.lng;
@@ -300,8 +321,6 @@ const pageInit = () => {
 
         cityWeatherSearch(selectedCity);
 
-        updateTodayPlanet(selectedPlanet);
-        updateWeeklyPlanet(selectedPlanet);
     }
 };
 
