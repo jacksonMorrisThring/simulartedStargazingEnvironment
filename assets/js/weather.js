@@ -9,6 +9,7 @@ const citySearch = document.querySelector('#city-search');
 let selectedCity = null; //user selected city
 let cityLat = null;
 let cityLng = null;
+let cityHeight = null;
 let weatherToday, weather7Day; //weather data holders
 let timezone;
 let offset;
@@ -114,10 +115,10 @@ const updateWeeklyWeather = () => {
 const updateTodayPlanet = (planet) => {
 
     //get height of location coordinates
-    let height = getHeight();
-
+    setHeight(cityLat, cityLng);
+    console.log(cityHeight);
     //create new observer
-    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+    let observer = new Astronomy.Observer(cityLat, cityLng, cityHeight);
 
     let date = new Date();
     let newDate = getOffsetDate(date);
@@ -136,10 +137,10 @@ const updateWeeklyPlanet = planet => {
     riseSetTimes = [];
 
     //get height of location coordinates
-    let height = getHeight();
+    setHeight(cityLat, cityLng);
 
     //create new observer
-    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+    let observer = new Astronomy.Observer(cityLat, cityLng, cityHeight);
 
     for(let i = 1; i <= 7; i++) {
         let date = getOffsetDate(new Date());
@@ -187,9 +188,23 @@ const getOffsetDate = date => {
 //This function will be used to get the height at certain coordinates
 //however this fetch will require some keys for a google api which are unsafe to chuck around during development
 //so for now it is just hardcoded, should be fine
-const getHeight = () => {
-    storeLocalUserPrefs('height', 59);
-    return 59;
+const setHeight = (lat, lng) => {
+    var fnRequestURL = "https://maps.googleapis.com/maps/api/elevation/json?locations="+lat+"%2C"+lng+"&key=AIzaSyBzLHUoT5HXQ28s19821jaSJxj1QBHXhpc";
+
+    fetch(fnRequestURL)
+    .then (function(response){
+        return response.json();
+    })
+
+    .then( function(data){
+
+        //assigning an object variable to the google data object containing elevation
+        var objectData = data.results[0]
+        console.log("returned data converted from object is: " + objectData.elevation);
+        storeLocalUserPrefs('height', objectData.elevation);
+        cityHeight = objectData.elevation;
+    })
+
 };
 
 //--------------------------------------- Form Handlers ---------------------------------------------------//
@@ -265,6 +280,7 @@ const pageInit = () => {
         cityLng = local.lng;
         selectedPlanet = local.planet;
         planet_index = local.planet_index;
+        cityHeight = local.height;
         flkty.select( planet_index );
 
         cityWeatherSearch(selectedCity);
