@@ -1,14 +1,43 @@
 
+//date and city variables ----------------------------------------//
 
-
-//search for date and city
+//form elements
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
-let selectedCity;
-let weatherToday, weather7Day;
+
+//global value holders
+let selectedCity = null; //user selected city
+let cityLat = null;
+let cityLng = null;
+let weatherToday, weather7Day; //weather data holders
+let timezone;
+let offset;
+let riseSetTimes = [];
+
+dayjs.extend(window.dayjs_plugin_utc);
+dayjs.extend(window.dayjs_plugin_timezone);
+
+//planet variables ----------------------------------------------//
+
+const planets = {
+    0 : 'Mercury',
+    1 : 'Venus',
+    2 : 'Mars',
+    3 : 'Jupiter',
+    4 : 'Saturn',
+    5 : 'Uranus',
+    6 : 'Neptune'
+}
+
+let selectedPlanet = 'Mercury';
+let planet_index = 0;
+
+//today Planet set and rise text
+const riseTimeText = document.querySelector('#rise-time');
+const setTimeText = document.querySelector('#set-time');
 
 
-
+//-------------------------------------- Weather API --------------------------------------------------------------------//
 
 //prepare data for longitude and latitude api call when city is entered
 const cityWeatherSearch = (name) => {
@@ -23,13 +52,15 @@ const cityWeatherSearch = (name) => {
         }
     }).then(info => {
         //save name, longitude, and latitude from response
-        const lat = info.coord.lat;
-        const lng = info.coord.lon;
+        cityLat = info.coord.lat;
+        cityLng = info.coord.lon;
 
-        return [name, lat, lng];
+        return [name, cityLat, cityLng];
     }).then(info => {
         //call onecall api to get more detailed data
         getWeather(info[0], info[1], info[2]);
+        updateTodayPlanet(selectedPlanet);
+        updateWeeklyPlanet(selectedPlanet);
     }).catch(() => {
         weatherApiFetchErrorHandler();
     })
@@ -50,6 +81,12 @@ const getWeather = (name, lat, lng) => {
             console.log(info);
             weatherToday = info.current;
             weather7Day = info.daily;
+            timezone = info.timezone;
+            offset = info.timezone_offset;
+
+            storeLocalUserPrefs('lat', lat);
+            storeLocalUserPrefs('lng', lng);
+            storeLocalUserPrefs('name', name);
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
@@ -57,29 +94,6 @@ const getWeather = (name, lat, lng) => {
 
 //error handler for failed api fetch
 const weatherApiFetchErrorHandler = event => {};
-
-//form submit handler 
-const citySearchChangeHandler = event => {
-    event.preventDefault();
-    selectedCity = citySearch.value;
-    cityWeatherSearch(selectedCity);
-
-    //update pages
-    updateTodayWeather();
-    updateWeeklyWeather();
-};
-
-//planet change handler
-const planetChangeHandler = () => {
-    //get planet
-
-    //set planet
-
-    //calculate rise and fall time for today,
-    updateTodayPlanet();
-    //and each day next week
-    updateWeeklyPlanet();
-}
 
 //update weather in today section
 //use weatherToday variable
@@ -93,24 +107,182 @@ const updateWeeklyWeather = () => {
     //update 7 day section
 };
 
-//update planet rise and fall today
-const updateTodayPlanet = () => {
-    //use planet functions to get rise and fall
 
+//--------------------------------------------- Planet Functions ----------------------------------------//
+
+//update planet rise and fall today
+const updateTodayPlanet = (planet) => {
+
+    //get height of location coordinates
+    let height = getHeight();
+
+    //create new observer
+    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+
+    let date = new Date();
+    let newDate = getOffsetDate(date);
+
+    //get rise and set time
+    const visibleSpan = getRiseSet(planet, observer, newDate);
+
+    console.log(visibleSpan); //error handling, delete for production
+    
     //update page
+    riseTimeText.innerText = visibleSpan.rise;
+    setTimeText.innerText = visibleSpan.set;
 }
 
-const updateWeeklyPlanet = () => {
-    //use planet functions
+const updateWeeklyPlanet = planet => {
+    riseSetTimes = [];
 
-    //update rise and fall for each day of the week
+    //get height of location coordinates
+    let height = getHeight();
+
+    //create new observer
+    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+
+    for(let i = 1; i <= 7; i++) {
+        let date = getOffsetDate(new Date());
+        date.setDate(date.getDate() + i);
+        riseSetTimes.push(getRiseSet(planet, observer, date));
+    }
+
+    return;
+};
+
+//will get Rise and Set of a planet on a day for an observer
+const getRiseSet = (planet, observer, date) => {
+    let visible = false;
+    //set to start of day
+    date.setUTCHours(0);
+
+    //get rise and set
+    let rise = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
+    let set = Astronomy.SearchRiseSet(planet, observer, -1, date ,1);
+
+    //if the set time is before the rise time, get the next set time
+    if(rise.date > set.date) {
+        date = rise.date;
+        set = Astronomy.SearchRiseSet(planet, observer, -1, date ,1);
+    }
+
+    //see if planet is currently visible
+    const dateNow = getOffsetDate(new Date());
+    if((rise.date < dateNow) && (dateNow < set.date)) {
+        visible = true;
+    }
+
+    //format string -> hh:mm AM/PM
+    rise = dayjs(rise.date).format('hh:mm A dd');
+    set = dayjs(set.date).format('hh:mm A dd');
+
+    return {rise: rise, set: set, visible: visible};
+}
+
+const getOffsetDate = date => {
+    let newDate = dayjs(date).utc();
+    newDate.utcOffset(offset/60);
+    return newDate.$d;
+}
+//This function will be used to get the height at certain coordinates
+//however this fetch will require some keys for a google api which are unsafe to chuck around during development
+//so for now it is just hardcoded, should be fine
+const getHeight = () => {
+    storeLocalUserPrefs('height', 59);
+    return 59;
+};
+
+//--------------------------------------- Form Handlers ---------------------------------------------------//
+
+//form submit handler 
+const citySearchChangeHandler = event => {
+    event.preventDefault();
+    selectedCity = citySearch.value;
+    cityWeatherSearch(selectedCity);
+
+    //update pages
+    updateTodayWeather();
+    updateWeeklyWeather();
+};
+
+//planet change handler
+const planetChangeHandler = planet => {
+    //set planet
+    selectedPlanet = planets[planet];
+    storeLocalUserPrefs('planet', selectedPlanet);
+    storeLocalUserPrefs('planet_index', planet);
+
+    if(selectedCity === null) {
+        console.log('please set location');
+        return;
+    }
+
+    //calculate rise and fall time for today,
+    updateTodayPlanet(selectedPlanet);
+    //and each day next week
+    updateWeeklyPlanet(selectedPlanet);
+}
+
+//planet carousel
+var flkty = new Flickity(".main-carousel", {
+    // options
+    wrapAround: true,
+    adaptiveHeight: true,
+    on: {
+        change: (index) => {
+            planetChangeHandler(index);
+        },
+    },
+});
+
+//----------------------------------------------- Local Storage ------------------------------------------------//
+const storeLocalUserPrefs = (key, value) => {
+    //get from local storage
+    let local = getLocalUserPrefs();
+    //update keys
+    local[key] = value;
+    //store to local storage
+    local = JSON.stringify(local);
+    localStorage.setItem('userPrefs', local);
+};
+
+const getLocalUserPrefs = () => {
+    let local = JSON.parse(localStorage.getItem('userPrefs'));
+
+    if(local) {
+        return local;
+    }
+
+    return {name: null, lat: null, lng: null, height: null, planet: null, planet_index: null};
+};
+
+const pageInit = () => {
+    let local = getLocalUserPrefs();
+
+    if(local['lat'] != null) {
+        selectedCity = local.name;
+        cityLat = local.lat;
+        cityLng = local.lng;
+        selectedPlanet = local.planet;
+        planet_index = local.planet_index;
+        flkty.select( planet_index );
+
+        cityWeatherSearch(selectedCity);
+
+        //update pages
+        updateTodayWeather();
+        updateWeeklyWeather();
+
+        updateTodayPlanet(selectedPlanet);
+        updateWeeklyPlanet(selectedPlanet);
+    }
 };
 
 
-
+//page initialization
 const init = () => {
+    pageInit();
     searchForm.addEventListener('submit', citySearchChangeHandler);
-    //add in listener for planet change
 }
 
 window.addEventListener('load',init);
