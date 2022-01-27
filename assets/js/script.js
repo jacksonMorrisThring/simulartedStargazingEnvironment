@@ -1,14 +1,15 @@
-
 //date and city variables ----------------------------------------//
 
 //form elements
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
+const locationTxt = document.querySelector('.location-text');
 
 //global value holders
 let selectedCity = null; //user selected city
 let cityLat = null;
 let cityLng = null;
+let cityHeight = null;
 let weatherToday, weather7Day; //weather data holders
 let timezone;
 let offset;
@@ -40,13 +41,12 @@ const setTimeText = document.querySelector('#set-time');
 //-------------------------------------- Weather API --------------------------------------------------------------------//
 
 //prepare data for longitude and latitude api call when city is entered
-const cityWeatherSearch = (name) => {
+const cityWeatherSearch = name => {
 
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=cf0f236d99f05f78766736970398dfe2`;
 
     return fetch(url).then(response => {
-        if(response.ok) {
-            
+        if(response.ok) {  
             //get data
             return response.json();
         }
@@ -55,12 +55,10 @@ const cityWeatherSearch = (name) => {
         cityLat = info.coord.lat;
         cityLng = info.coord.lon;
 
-        return [name, cityLat, cityLng];
+        return [info.name, cityLat, cityLng];
     }).then(info => {
         //call onecall api to get more detailed data
         getWeather(info[0], info[1], info[2]);
-        updateTodayPlanet(selectedPlanet);
-        updateWeeklyPlanet(selectedPlanet);
     }).catch(() => {
         weatherApiFetchErrorHandler();
     })
@@ -78,46 +76,116 @@ const getWeather = (name, lat, lng) => {
             }
         })
         .then(info => {
-            console.log(info);
+            //save todays weather and the coming weeks
             weatherToday = info.current;
             weather7Day = info.daily;
+            
+            //get the timezone and utc offset
             timezone = info.timezone;
             offset = info.timezone_offset;
 
+            //save states to localStorage
             storeLocalUserPrefs('lat', lat);
             storeLocalUserPrefs('lng', lng);
             storeLocalUserPrefs('name', name);
+            storeLocalUserPrefs('planet', selectedPlanet);
+            storeLocalUserPrefs('planet_index', planet_index);
+
+            //update planet data
+            updatePlanets(selectedPlanet, cityLat, cityLng);
+
+            //update weather data
+            updateTodayWeather();
+            updateWeeklyWeather();
+
+            //update location text
+            locationTxt.innerText = name;
+            citySearch.value = "";
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
 };
 
+
 //error handler for failed api fetch
 const weatherApiFetchErrorHandler = event => {};
+
 
 //update weather in today section
 //use weatherToday variable
 const updateTodayWeather = () => {
-
+    var currentrisetime = document.getElementById("rise-time");
+    currentrisetime.textContent = dayjs(weatherToday.sunrise*1000).format("hh:mm A");
+    var currentsettime = document.getElementById("set-time");
+    currentsettime.textContent = dayjs(weatherToday.sunset*1000).format("hh:mm A");
+    var currentcondition = document.getElementById("condition");
+    currentcondition.textContent = `Condition: ${weatherToday.weather[0].main}`;
+    var currenttemperature = document.getElementById("temperature");
+    currenttemperature.textContent = `Temperature: ${weatherToday.temp} °C`;
+    var currentwind = document.getElementById("wind");
+    currentwind.textContent = `Wind: ${weatherToday.wind_speed} km/h`;
+    var currenthumidity = document.getElementById("humidity");
+    currenthumidity.textContent = `Humidity: ${weatherToday.humidity} %`;
 };
+
 
 //update the weather for the week
 const updateWeeklyWeather = () => {
     //use weather7Day variable
     //update 7 day section
+    var forecastbox = document.querySelector(".day-container");
+    forecastbox.innerHTML = "";
+    //update 7 day section
+    for (let i=1; i<6; i++) {
+        forecastbox.innerHTML +=
+            `<div class="inline-grid p-5 rounded-lg shadow-lg bg-indigo-500 max-w-sm mx-10 w-80 h-90 mt-12 shadow-lg ml-5 mb-3">
+                <h5 class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Condition: ${weather7Day[i].weather[0].main}</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Hightemp: ${weather7Day[i].temp.max} °C</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Lowtemp: ${weather7Day[i].temp.min} °C</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Windspeed: ${weather7Day[i].wind_speed}km/h</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Humidity: ${weather7Day[i].humidity}%</div>
+            </div>`;
+    }
 };
+
+
+
 
 
 //--------------------------------------------- Planet Functions ----------------------------------------//
 
+//parent function to handle update of planets
+const updatePlanets = (planet, lat, lng) => {
+    //google elevation API
+    var fnRequestURL = "https://maps.googleapis.com/maps/api/elevation/json?locations="+lat+"%2C"+lng+"&key=AIzaSyBzLHUoT5HXQ28s19821jaSJxj1QBHXhpc";
+
+    //fetch height
+    fetch(fnRequestURL)
+    .then (function(response){
+        return response.json();
+    }).then( function(data){
+        //assigning an object variable to the google data object containing elevation
+        var objectData = data.results[0];
+        //aving elevation globally 
+        cityHeight = objectData.elevation;
+        //updating local Storage
+        storeLocalUserPrefs('height', cityHeight);
+        return;
+    }).then(() => {
+        //update planet rise and fall times
+        updateTodayPlanet(planet);
+        updateWeeklyPlanet(planet);
+    })
+
+};
+
+
 //update planet rise and fall today
 const updateTodayPlanet = (planet) => {
 
-    //get height of location coordinates
-    let height = getHeight();
-
     //create new observer
-    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+    let observer = new Astronomy.Observer(cityLat, cityLng, cityHeight);
 
     let date = new Date();
     let newDate = getOffsetDate(date);
@@ -126,20 +194,21 @@ const updateTodayPlanet = (planet) => {
     const visibleSpan = getRiseSet(planet, observer, newDate);
 
     console.log(visibleSpan); //error handling, delete for production
-    
+
     //update page
     riseTimeText.innerText = visibleSpan.rise;
     setTimeText.innerText = visibleSpan.set;
 }
 
+
+//get rise and fall times for 7 days after the current day
 const updateWeeklyPlanet = planet => {
     riseSetTimes = [];
 
     //get height of location coordinates
-    let height = getHeight();
 
     //create new observer
-    let observer = new Astronomy.Observer(cityLat, cityLng, height);
+    let observer = new Astronomy.Observer(cityLat, cityLng, cityHeight);
 
     for(let i = 1; i <= 7; i++) {
         let date = getOffsetDate(new Date());
@@ -150,11 +219,12 @@ const updateWeeklyPlanet = planet => {
     return;
 };
 
+
 //will get Rise and Set of a planet on a day for an observer
 const getRiseSet = (planet, observer, date) => {
     let visible = false;
     //set to start of day
-    date.setUTCHours(0);
+    date.setHours(0,0,0,0);
 
     //get rise and set
     let rise = Astronomy.SearchRiseSet(planet, observer, 1, date ,1);
@@ -179,31 +249,25 @@ const getRiseSet = (planet, observer, date) => {
     return {rise: rise, set: set, visible: visible};
 }
 
+
+//helper function to offest javascript date object to the correct timezone of searched city
 const getOffsetDate = date => {
     let newDate = dayjs(date).utc();
     newDate.utcOffset(offset/60);
     return newDate.$d;
 }
-//This function will be used to get the height at certain coordinates
-//however this fetch will require some keys for a google api which are unsafe to chuck around during development
-//so for now it is just hardcoded, should be fine
-const getHeight = () => {
-    storeLocalUserPrefs('height', 59);
-    return 59;
-};
+
+
 
 //--------------------------------------- Form Handlers ---------------------------------------------------//
 
-//form submit handler 
+//location form submit handler 
 const citySearchChangeHandler = event => {
     event.preventDefault();
     selectedCity = citySearch.value;
     cityWeatherSearch(selectedCity);
-
-    //update pages
-    updateTodayWeather();
-    updateWeeklyWeather();
 };
+
 
 //planet change handler
 const planetChangeHandler = planet => {
@@ -217,11 +281,12 @@ const planetChangeHandler = planet => {
         return;
     }
 
-    //calculate rise and fall time for today,
-    updateTodayPlanet(selectedPlanet);
-    //and each day next week
-    updateWeeklyPlanet(selectedPlanet);
+    //update planet rise and fall data
+    updatePlanets(selectedPlanet, cityLat, cityLng);
 }
+
+
+//--------------------------------------------- Planet Carousel -------------------------------------------------//
 
 //planet carousel
 var flkty = new Flickity(".main-carousel", {
@@ -235,7 +300,11 @@ var flkty = new Flickity(".main-carousel", {
     },
 });
 
+
+
 //----------------------------------------------- Local Storage ------------------------------------------------//
+
+//store a key value pair in the userPrefs local storage key
 const storeLocalUserPrefs = (key, value) => {
     //get from local storage
     let local = getLocalUserPrefs();
@@ -246,6 +315,8 @@ const storeLocalUserPrefs = (key, value) => {
     localStorage.setItem('userPrefs', local);
 };
 
+
+//get userPrefs from local storage
 const getLocalUserPrefs = () => {
     let local = JSON.parse(localStorage.getItem('userPrefs'));
 
@@ -256,25 +327,28 @@ const getLocalUserPrefs = () => {
     return {name: null, lat: null, lng: null, height: null, planet: null, planet_index: null};
 };
 
+
+//page initialization of weather and planet values
 const pageInit = () => {
+    //get local storage data
     let local = getLocalUserPrefs();
 
-    if(local['lat'] != null) {
+    //if all needed data is initialized
+    if((local['lat'] != null) && (local['planet'] != null)) {
+
+        //use local data to update current global values
         selectedCity = local.name;
         cityLat = local.lat;
         cityLng = local.lng;
         selectedPlanet = local.planet;
         planet_index = local.planet_index;
+        cityHeight = local.height;
+
+        //set carousel to the correct planet
         flkty.select( planet_index );
 
+        //update the page with new information (weather, rise and fall)
         cityWeatherSearch(selectedCity);
-
-        //update pages
-        updateTodayWeather();
-        updateWeeklyWeather();
-
-        updateTodayPlanet(selectedPlanet);
-        updateWeeklyPlanet(selectedPlanet);
     }
 };
 
@@ -285,4 +359,6 @@ const init = () => {
     searchForm.addEventListener('submit', citySearchChangeHandler);
 }
 
+
+//listener for page load
 window.addEventListener('load',init);

@@ -18,31 +18,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
 
-    <title>Planet forcast</title>
+    <title>Planet Forecast</title>
 </head>
-<body>
+<body class="bg-indigo-900">
     <header>
         <!-- Navigation -->
-        <nav class="sticky w-full sm:flex sm:flex-wrap items-center justify-between py-4 bg-blue-100 text-gray-500 hover:text-gray-700 focus:text-gray-700 shadow-lg navbar navbar-expand-lg navbar-light" style="font-family: 'Space Mono';">
-            <p class="text-3xl px-5">Stargazing Simulation</p>
+        <nav class="sticky w-full flex flex-col lg:flex-row items-center justify-between py-4 px-5 bg-gradient-to-r from-slate-900 to-blue-900 text-white hover:text-gray-100 focus:text-gray-100 shadow-lg navbar navbar-expand-lg navbar-light" style="font-family: 'Space Mono';">
+
+            <p class="text-3xl ">Stargazing Simulation</p>
+                
             <section>
-              <ul class="block text-center sm:flex">
-                <li class="px-4"><a href="#">PLANET SELECTOR</a></li>
-                <li class="px-4 border-gray-300 border-x-indigo-100"><a href="#">RESULTS</a></li>
-                <li class="px-4"><a href="#">PLANET VISIBILITY</a></li>
+              <ul class="text-center flex flex-col sm:flex-row justify-between gap-2 sm:gap-12 mt-6 lg:mt-0">
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#">PLANET SELECTOR</a></li>
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#">RESULTS</a></li>
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#">PLANET VISIBILITY</a></li>
               </ul>
             </section>
           </nav>
     </header>
 
-    <main>
+    <main class="mt-8 md:mt-0">
         <!-- Form section -->
-        <section class="form-container">
-            <form id="search-form" class="">
+        <section class="form-container flex flex-col md:flex-row justify-between text-center md:items-center my-2 px-5">
+            <form id="search-form" class="flex flex-wrap md:max-w-md md:flex-nowrap  gap-2">
                 <input type="text" name="city-search" id="city-search" 
                 class="
                 form-control
-                w-60
+                w-full
+                md:w-auto
                 px-3
                 py-1.5
                 text-base
@@ -56,59 +59,75 @@
                 m-0
                 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 placeholder="Set a Location">
-                <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Set Location</button>
+                <button type="submit" class="w-full content-center px-6 py-2 bg-slate-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Set Location</button>
             </form>
+            <p class="location-text text-2xl font-bold text-white my-4 lg:my-0">Please Enter A Location</p>
         </section>
 
         <!-- Planet Selector -->
-        <section class="planet-select-container">
+        <section class="planet-select-container w-full h-full bg-no-repeat bg-cover" style="background-image: url(./assets/images/background/StarryNight.jpg);">
             <div class="main-carousel w-full m-auto">
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/1-Mercury.png" alt="Mercury" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Mercury</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Mercury</p>
                 </div>
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/2-Venus.png" alt="Venus" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Venus</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Venus</p>
                 </div>
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/4-Mars.png" alt="Mars" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Mars</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Mars</p>
                 </div>
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/5-Jupiter.png" alt="Jupiter" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Jupiter</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Jupiter</p>
                 </div>
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/6-Saturn.png" alt="Saturn" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Saturn</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Saturn</p>
                 </div>
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/7-Uranus.png" alt="Uranus" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Uranus</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Uranus</p>
                 </div>
                 <div class="carousel-cell w-full md:w-1/3 grid items-center">
                     <img src="./assets/images/planets/8-Neptune.png" alt="Neptune" class="m-auto col-span-full row-span-full">
-                    <p class="col-span-full row-span-full text-center text-3xl font-bold">Neptune</p>
+                    <p class="col-span-full row-span-full text-center text-3xl font-bold text-white"  style="text-shadow: 2px 2px 8px black">Neptune</p>
                 </div>
             </div>
               
         </section>
 
         <!-- Today's Results -->
-        <section class="today-result-container">
-            <article class="rise-set-container w-40 h-40 mt-12 shadow-lg">
-                <section class="rise-set-time-container">
-                    <p>Rise: <span id="rise-time"></span></p>
-                    <p>Set: <span id="set-time"></span></p>
+        <section class="today-result-container bg-indigo-900" style="font-family: 'DM Sans';">
+            <h2 class="text-white ml-5 mt-6 text-2xl">Results for Today:</h2>
+            <article class="rise-set-container flex justify-start">
+                <section class="todays-info w-80 h-80 mt-12 shadow-lg ml-5 mb-3 bg-indigo-500 rounded-lg">
+                    <p id="condition" class="text-white ml-4 mt-5 text-lg">Condition: </p>
+                    <p id="temperature" class="text-white ml-4 mt-5 text-lg">Temperature: </p>
+                    <p id="wind" class="text-white ml-4 mt-5 text-lg">Wind: </p>
+                    <p id="humidity" class="text-white ml-4 mt-5 text-lg">Humidity: </p>
                 </section>
+                
+                <section class="rise-set-time-container w-80 h-80 mt-12 shadow-lg ml-5 mb-3 bg-indigo-500 rounded-lg md:container md:mx-5px mr-10">
+                    <br><br>
+                    <p style="font-family: 'DM Sans';" class="text-white text-2xl ml-4 mt-5 text-center font-bold">RISING HOUR</p>
+                    <p style="font-family: 'DM Sans';" class="text-white ml-4 mt-5 text-lg text-center"><span id="rise-time"></span></p>
+                    <p style="font-family: 'DM Sans';" class="text-white text-2xl ml-4 mt-5 text-center font-bold">SETTING HOUR</p>
+                    <p style="font-family: 'DM Sans';" class="text-white ml-4 mt-5 text-lg text-center"><span id="set-time"></span></p>
+                </section>
+                
             </article>
 
         </section>
 
         <!-- 7 Day Forecast -->
-        <section class="7day-container">
+        <section>
+            <h2 class="text-white ml-5 mt-6 text-2xl">5 Day Forecast:</h2>
+            <div class="day-container">
 
+            </div>
         </section>
 
         <!-- planets visible today -->
@@ -126,6 +145,6 @@
     <script src="https://unpkg.com/dayjs@1.10.7/plugin/timezone.js"></script>
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script src="./assets/js/astronomy.browser.js"></script> 
-    <script src = './assets/js/weather.js'></script>
+    <script src = './assets/js/script.js'></script>
 </body>
 </html>
