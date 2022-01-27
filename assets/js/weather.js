@@ -123,11 +123,12 @@ const updateWeeklyWeather = () => {
     //use weather7Day variable
     //update 7 day section
     var forecastbox = document.querySelector(".day-container");
+    forecastbox.innerHTML = "";
     //update 7 day section
     for (let i=1; i<8; i++) {
         forecastbox.innerHTML +=
             `<div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm mx-2">
-                <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">${dayjs(weather7Day[i].dt*1000).format("DD/MM/YYYY")}</h5>
+                <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">${dayjs(weather7Day[i].dt*1000).format("DD/MM/YYYY")} ${dayjs(weather7Day[i].dt*1000).format("ddd")}</h5>
                 <div class="text-gray-700 text-base mb-1 w-16">Condition:${weather7Day[i].weather[0].main}</div>
                 <div class="text-gray-700 text-base mb-1 w-16">Hightemp:${weather7Day[i].temp.max}</div>
                 <div class="text-gray-700 text-base mb-1 w-16">Lowtemp:${weather7Day[i].temp.min}</div>
