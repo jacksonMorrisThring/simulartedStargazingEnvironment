@@ -3,6 +3,7 @@
 //form elements
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
+const locationTxt = document.querySelector('.location-text');
 
 //global value holders
 let selectedCity = null; //user selected city
@@ -54,7 +55,7 @@ const cityWeatherSearch = name => {
         cityLat = info.coord.lat;
         cityLng = info.coord.lon;
 
-        return [name, cityLat, cityLng];
+        return [info.name, cityLat, cityLng];
     }).then(info => {
         //call onecall api to get more detailed data
         getWeather(info[0], info[1], info[2]);
@@ -96,6 +97,10 @@ const getWeather = (name, lat, lng) => {
             //update weather data
             updateTodayWeather();
             updateWeeklyWeather();
+
+            //update location text
+            locationTxt.innerText = name;
+            citySearch.value = "";
         }).catch(() => {
             weatherApiFetchErrorHandler();
         })
