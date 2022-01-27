@@ -23,21 +23,23 @@
 <body class="bg-indigo-900">
     <header>
         <!-- Navigation -->
-        <nav class="sticky w-full sm:flex sm:flex-wrap items-center justify-between py-4 bg-gradient-to-r from-slate-900 to-blue-900 text-white hover:text-gray-100 focus:text-gray-100 shadow-lg navbar navbar-expand-lg navbar-light" style="font-family: 'Space Mono';">
-            <p class="text-3xl px-5">Stargazing Simulation</p>
+        <nav class="sticky w-full flex flex-col lg:flex-row items-center justify-between py-4 px-5 bg-gradient-to-r from-slate-900 to-blue-900 text-white hover:text-gray-100 focus:text-gray-100 shadow-lg navbar navbar-expand-lg navbar-light" style="font-family: 'Space Mono';">
+
+            <p class="text-3xl ">Stargazing Simulation</p>
+                
             <section>
-              <ul class="block text-center sm:flex">
-                <li class="px-4"><a href="#">PLANET SELECTOR</a></li>
-                <li class="px-4 border-gray-300 border-x-indigo-100"><a href="#">RESULTS</a></li>
-                <li class="px-4"><a href="#">PLANET VISIBILITY</a></li>
+              <ul class="text-center flex flex-col sm:flex-row justify-between gap-2 sm:gap-12 mt-6 lg:mt-0">
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#">PLANET SELECTOR</a></li>
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#">RESULTS</a></li>
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#">PLANET VISIBILITY</a></li>
               </ul>
             </section>
           </nav>
     </header>
 
-    <main>
+    <main class="mt-8 md:mt-0">
         <!-- Form section -->
-        <section class="form-container flex flex-col md:flex-row justify-between text-center md:items-center m-2">
+        <section class="form-container flex flex-col md:flex-row justify-between text-center md:items-center my-2 px-5">
             <form id="search-form" class="flex flex-wrap md:max-w-md md:flex-nowrap  gap-2">
                 <input type="text" name="city-search" id="city-search" 
                 class="
@@ -59,7 +61,7 @@
                 placeholder="Set a Location">
                 <button type="submit" class="w-full content-center px-6 py-2 bg-slate-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Set Location</button>
             </form>
-            <p class="location-text text-2xl font-bold text-white">Please Enter A Location</p>
+            <p class="location-text text-2xl font-bold text-white my-4 lg:my-0">Please Enter A Location</p>
         </section>
 
         <!-- Planet Selector -->
