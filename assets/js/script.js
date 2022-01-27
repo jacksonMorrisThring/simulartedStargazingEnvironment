@@ -114,7 +114,18 @@ const weatherApiFetchErrorHandler = event => {};
 //update weather in today section
 //use weatherToday variable
 const updateTodayWeather = () => {
-    
+    var currentrisetime = document.getElementById("rise-time");
+    currentrisetime.textContent = dayjs(weatherToday.sunrise*1000).format("hh:mm A");
+    var currentsettime = document.getElementById("set-time");
+    currentsettime.textContent = dayjs(weatherToday.sunset*1000).format("hh:mm A");
+    var currentcondition = document.getElementById("condition");
+    currentcondition.textContent = `Condition: ${weatherToday.weather[0].main}`;
+    var currenttemperature = document.getElementById("temperature");
+    currenttemperature.textContent = `Temperature: ${weatherToday.temp} °C`;
+    var currentwind = document.getElementById("wind");
+    currentwind.textContent = `Wind: ${weatherToday.wind_speed} km/h`;
+    var currenthumidity = document.getElementById("humidity");
+    currenthumidity.textContent = `Humidity: ${weatherToday.humidity} %`;
 };
 
 
@@ -130,8 +141,8 @@ const updateWeeklyWeather = () => {
             `<div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm mx-2">
                 <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">${dayjs(weather7Day[i].dt*1000).format("DD/MM/YYYY")} ${dayjs(weather7Day[i].dt*1000).format("ddd")}</h5>
                 <div class="text-gray-700 text-base mb-1 w-16">Condition:${weather7Day[i].weather[0].main}</div>
-                <div class="text-gray-700 text-base mb-1 w-16">Hightemp:${weather7Day[i].temp.max}</div>
-                <div class="text-gray-700 text-base mb-1 w-16">Lowtemp:${weather7Day[i].temp.min}</div>
+                <div class="text-gray-700 text-base mb-1 w-16">Hightemp:${weather7Day[i].temp.max} °C</div>
+                <div class="text-gray-700 text-base mb-1 w-16">Lowtemp:${weather7Day[i].temp.min} °C</div>
                 <div class="text-gray-700 text-base mb-1 w-16">Windspeed:${weather7Day[i].wind_speed}km/h</div>
                 <div class="text-gray-700 text-base mb-1 w-16">Humidity:${weather7Day[i].humidity}%</div>
             </div>`;
