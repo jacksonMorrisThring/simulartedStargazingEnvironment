@@ -136,18 +136,20 @@ const updateWeeklyWeather = () => {
     var forecastbox = document.querySelector(".day-container");
     forecastbox.innerHTML = "";
     //update 7 day section
-    for (let i=1; i<8; i++) {
+    for (let i=1; i<6; i++) {
         forecastbox.innerHTML +=
-            `<div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm mx-2">
-                <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">${dayjs(weather7Day[i].dt*1000).format("DD/MM/YYYY")} ${dayjs(weather7Day[i].dt*1000).format("ddd")}</h5>
-                <div class="text-gray-700 text-base mb-1 w-16">Condition:${weather7Day[i].weather[0].main}</div>
-                <div class="text-gray-700 text-base mb-1 w-16">Hightemp:${weather7Day[i].temp.max} °C</div>
-                <div class="text-gray-700 text-base mb-1 w-16">Lowtemp:${weather7Day[i].temp.min} °C</div>
-                <div class="text-gray-700 text-base mb-1 w-16">Windspeed:${weather7Day[i].wind_speed}km/h</div>
-                <div class="text-gray-700 text-base mb-1 w-16">Humidity:${weather7Day[i].humidity}%</div>
+            `<div class="inline-grid p-5 rounded-lg shadow-lg bg-indigo-500 max-w-sm mx-10 w-80 h-90 mt-12 shadow-lg ml-5 mb-3">
+                <h5 class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Condition: ${weather7Day[i].weather[0].main}</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Hightemp: ${weather7Day[i].temp.max} °C</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Lowtemp: ${weather7Day[i].temp.min} °C</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Windspeed: ${weather7Day[i].wind_speed}km/h</div>
+                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Humidity: ${weather7Day[i].humidity}%</div>
             </div>`;
     }
 };
+
+
 
 
 
