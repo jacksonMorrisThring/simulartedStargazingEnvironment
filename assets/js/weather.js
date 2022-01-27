@@ -105,6 +105,7 @@ const weatherApiFetchErrorHandler = event => {};
 //update weather in today section
 //use weatherToday variable
 const updateTodayWeather = () => {
+    
     console.log(weather7Day);
 };
 
@@ -115,15 +116,15 @@ const updateWeeklyWeather = () => {
     //update 7 day section
     var forecastbox = document.querySelector(".day-container");
     //update 7 day section
-    for (let i=1; i<8; i++) {
+    for (let i=1; i<6; i++) {
         forecastbox.innerHTML +=
-            `<div class="block p-6 rounded-lg shadow-lg bg-white max-w-sm mx-10">
-                <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">${weather7Day[i].dt}</h5>
-                <div class="text-gray-700 text-base mb-4 w-28">Condition:${weather7Day[i].weather[0].main}</div>
-                <div class="text-gray-700 text-base mb-4 w-28">Hightemp:${weather7Day[i].temp.max}</div>
-                <div class="text-gray-700 text-base mb-4 w-28">Lowtemp:${weather7Day[i].temp.min}</div>
-                <div class="text-gray-700 text-base mb-4 w-28">Windspeed:${weather7Day[i].wind_speed}km/h</div>
-                <div class="text-gray-700 text-base mb-4 w-28">Humidity:${weather7Day[i].humidity}%</div>
+            `<div class="inline-grid p-5 rounded-lg shadow-lg bg-indigo-500 max-w-sm mx-10 w-80 h-90 mt-12 shadow-lg ml-5 mb-3">
+                <h5 class="text-white text-xl leading-tight font-medium mb-2 text-bold">${weather7Day[i].dt}</h5>
+                <div class="text-gray-200 text-base mb-4 w-28 text-sm">Condition: ${weather7Day[i].weather[0].main}</div>
+                <div class="text-gray-200 text-base mb-4 w-28 text-sm">Hightemp: ${weather7Day[i].temp.max}</div>
+                <div class="text-gray-200 text-base mb-4 w-28 text-sm">Lowtemp: ${weather7Day[i].temp.min}</div>
+                <div class="text-gray-200 text-base mb-4 w-28 text-sm">Windspeed: ${weather7Day[i].wind_speed}km/h</div>
+                <div class="text-gray-200 text-base mb-4 w-28 text-sm">Humidity: ${weather7Day[i].humidity}%</div>
             </div>`;
     }
 };
