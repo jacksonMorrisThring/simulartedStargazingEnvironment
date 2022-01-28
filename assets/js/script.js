@@ -1,5 +1,10 @@
 //date and city variables ----------------------------------------//
 
+//Navbar elements
+const menuBtn = document.querySelector('#menu-toggle');
+const menuBtnImg = document.querySelector('#menu-toggle-img');
+const navLinks = document.querySelector('#nav-links');
+
 //form elements
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
@@ -341,6 +346,22 @@ const getLocalUserPrefs = () => {
     return {name: null, lat: null, lng: null, height: null, planet: null, planet_index: null};
 };
 
+//-------------------------------- Navbar -------------------------------------------------------//
+
+const toggleMenu = () => {
+    let status = menuBtn.value;
+
+    if(status === "closed") {
+        menuBtn.value = "open";
+        navLinks.classList.remove('hidden');
+        menuBtnImg.setAttribute('src', './assets/images/icons/menu-close.svg');
+    } else {
+        menuBtn.value = "closed";
+        navLinks.classList.add('hidden');
+        menuBtnImg.setAttribute('src', './assets/images/icons/menu-open.svg');
+    }
+};
+//-------------------------------- Page Initilization -------------------------------------------//
 
 //page initialization of weather and planet values
 const pageInit = () => {
