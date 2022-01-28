@@ -107,11 +107,9 @@ const getWeather = (name, lat, lng) => {
 
             //update planet data
             let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
-            console.log(promise);
 
             //update weather data
             promise.then(response => {
-                console.log(response);
                 if(response === "success") {
 
                     updateTodayWeather();
@@ -205,18 +203,15 @@ const updatePlanets = (planet, lat, lng) => {
       locations: [location],
     })
     .then (({ results }) => {
-        console.log(results);
         if(results[0]) {
             return results[0].elevation;
         }
     })
-    .then( function(data){
-        console.log(data);
+    .then( data => {
         //saving elevation globally 
         cityHeight = data;
         //updating local Storage
         storeLocalUserPrefs('height', cityHeight);
-        console.log('sotred user prefs');
         updateTodayPlanet(planet);
         updateWeeklyPlanet(planet);
         return 'success';
@@ -379,7 +374,6 @@ const createCard = (weather, icon, rise, set, date, planet, city, id) => {
 
 //deletes the card
 const deleteCard = target => {
-    console.log(target.parentElement.id);
     let id = target.parentElement.id;
     removeFromLocalDates(id);
     target.parentNode.remove();
@@ -433,8 +427,6 @@ const planetChangeHandler = planet => {
 
     //update planet rise and fall data
     let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
-    console.log('promise from planet change handler ');
-    console.log(promise);
     promise.then(() => {
         updateWeeklyWeather();
     })
@@ -593,5 +585,3 @@ const init = () => {
 
 //listener for page load
 window.addEventListener('load',init);
-
-const initMap = () => {}; //was here for error stuff but seems to be not needed -> will discard soon
