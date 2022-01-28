@@ -103,7 +103,6 @@ const getWeather = (name, lat, lng) => {
 
             //update planet data
             let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
-            console.log(promise);
 
             //update weather data
             promise.then(response => {
@@ -228,8 +227,6 @@ const updateTodayPlanet = (planet) => {
 
     //get rise and set time
     const visibleSpan = getRiseSet(planet, observer, newDate);
-
-    console.log(visibleSpan); //error handling, delete for production
 
     //update page
     riseTimeText.innerText = visibleSpan.rise;
@@ -372,7 +369,6 @@ const saveDate = target => {
     let set = document.querySelector(`#set${card}`).innerText;
     let date = document.querySelector(`#date${card}`).innerText;
     let icon = document.querySelector(`#icon${card}`).dataset.icon;
-    console.log(icon);
     
     let id = getUniqueId();
     console.log(id);
