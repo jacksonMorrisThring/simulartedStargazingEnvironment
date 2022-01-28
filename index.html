@@ -34,7 +34,7 @@
               <ul class="text-center flex flex-col sm:flex-row justify-between gap-2 sm:gap-12 mt-6 lg:mt-0">
                 <li class="hover:text-blue-600 hover:font-bold"><a href="#planet-selector-nav">PLANET SELECTOR</a></li>
                 <li class="hover:text-blue-600 hover:font-bold"><a href="#results-today-nav">TODAY'S RESULTS</a></li>
-                <li class="hover:text-blue-600 hover:font-bold"><a href="#7day-nav">WEEKLY RESULTS</a></li>
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#day-nav">WEEKLY RESULTS</a></li>
               </ul>
             </section>
           </nav>
@@ -103,7 +103,7 @@
         </section>
 
         <!-- Today's Results -->
-        <section id="results-today-nav" class="today-result-container bg-indigo-900 mx-5 mt-12" style="font-family: 'DM Sans';">
+        <section id="results-today-nav" class="today-result-container bg-indigo-900 mx-5 mt-12 hidden" style="font-family: 'DM Sans';">
             <h2 class="text-white  mb-8 text-2xl font-bold">Results for Today</h2>
             <article class="rise-set-container flex flex-col sm:flex-row gap-4">
                 <section class="todays-info w-auto sm:w-80 sm:h-80 flex flex-col gap-5 justify-center p-4 shadow-lg bg-indigo-500 rounded-lg">
@@ -115,9 +115,9 @@
                 
                 <section class="rise-set-time-container flex-grow h-80 shadow-lg bg-indigo-500 rounded-lg">
                     <br><br>
-                    <p style="font-family: 'DM Sans';" class="text-white text-2xl ml-4 mt-5 text-center font-bold">RISING HOUR</p>
+                    <p style="font-family: 'DM Sans';" class="text-white text-2xl ml-4 mt-5 text-center font-bold">PLANET RISE</p>
                     <p style="font-family: 'DM Sans';" class="text-white ml-4 mt-5 text-lg text-center"><span id="rise-time"></span></p>
-                    <p style="font-family: 'DM Sans';" class="text-white text-2xl ml-4 mt-5 text-center font-bold">SETTING HOUR</p>
+                    <p style="font-family: 'DM Sans';" class="text-white text-2xl ml-4 mt-5 text-center font-bold">PLANET SET</p>
                     <p style="font-family: 'DM Sans';" class="text-white ml-4 mt-5 text-lg text-center"><span id="set-time"></span></p>
                 </section>
                 
@@ -126,7 +126,7 @@
         </section>
 
         <!-- 7 Day Forecast -->
-        <section id="7day-nav" class="7day-forecast-container m-5 mt-6">
+        <section id="day-nav" class="7day-forecast-container m-5 mt-6 hidden">
             <h2 class="text-white text-2xl font-bold">5 Day Forecast</h2>
             <div class="day-container flex flex-col lg:flex-row gap-4 flex-wrap mt-8">
 

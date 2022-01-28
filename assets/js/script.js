@@ -1,5 +1,9 @@
 //date and city variables ----------------------------------------//
 
+//Page Sections
+const todaySection = document.querySelector('#results-today-nav');
+const weeklySection = document.querySelector('#day-nav');
+
 //Navbar elements
 const menuBtn = document.querySelector('#menu-toggle');
 const menuBtnImg = document.querySelector('#menu-toggle-img');
@@ -104,6 +108,9 @@ const getWeather = (name, lat, lng) => {
             promise.then(() => {
                 updateTodayWeather();
                 updateWeeklyWeather();
+
+                todaySection.classList.remove('hidden');
+                weeklySection.classList.remove('hidden');
             });
             
 
@@ -385,6 +392,7 @@ const pageInit = () => {
         //update the page with new information (weather, rise and fall)
         cityWeatherSearch(selectedCity);
     }
+
 };
 
 
