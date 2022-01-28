@@ -1,4 +1,4 @@
-//date and city variables ----------------------------------------//
+//--------------------------------date and city variables -----------------------------------//
 
 //Page Sections
 const todaySection = document.querySelector('#results-today-nav');
@@ -27,7 +27,7 @@ let riseSetTimes = [];
 dayjs.extend(window.dayjs_plugin_utc);
 dayjs.extend(window.dayjs_plugin_timezone);
 
-//planet variables ----------------------------------------------//
+//--------------------------------planet variables -------------------------------------//
 
 const planets = {
     0 : 'Mercury',
@@ -47,7 +47,7 @@ const riseTimeText = document.querySelector('#rise-time');
 const setTimeText = document.querySelector('#set-time');
 
 
-//-------------------------------------- Weather API --------------------------------------------------------------------//
+//-------------------------------------- Weather API -----------------------------------------//
 
 //prepare data for longitude and latitude api call when city is entered
 const cityWeatherSearch = name => {
@@ -179,7 +179,7 @@ const updateWeeklyWeather = () => {
 
 
 
-//--------------------------------------------- Planet Functions ----------------------------------------//
+//-------------------------------------- Planet Functions ----------------------------------//
 
 //parent function to handle update of planets
 const updatePlanets = (planet, lat, lng) => {
