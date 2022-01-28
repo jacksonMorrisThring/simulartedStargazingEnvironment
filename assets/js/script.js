@@ -1,5 +1,14 @@
 //date and city variables ----------------------------------------//
 
+//Page Sections
+const todaySection = document.querySelector('#results-today-nav');
+const weeklySection = document.querySelector('#day-nav');
+
+//Navbar elements
+const menuBtn = document.querySelector('#menu-toggle');
+const menuBtnImg = document.querySelector('#menu-toggle-img');
+const navLinks = document.querySelector('#nav-links');
+
 //form elements
 const searchForm = document.querySelector('#search-form');
 const citySearch = document.querySelector('#city-search');
@@ -92,16 +101,24 @@ const getWeather = (name, lat, lng) => {
             storeLocalUserPrefs('planet_index', planet_index);
 
             //update planet data
-            updatePlanets(selectedPlanet, cityLat, cityLng);
+            let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
+            console.log(promise);
 
             //update weather data
-            updateTodayWeather();
-            updateWeeklyWeather();
+            promise.then(() => {
+                updateTodayWeather();
+                updateWeeklyWeather();
+
+                todaySection.classList.remove('hidden');
+                weeklySection.classList.remove('hidden');
+            });
+            
 
             //update location text
             locationTxt.innerText = name;
             citySearch.value = "";
-        }).catch(() => {
+        })
+        .catch(() => {
             weatherApiFetchErrorHandler();
         })
 };
@@ -114,18 +131,14 @@ const weatherApiFetchErrorHandler = event => {};
 //update weather in today section
 //use weatherToday variable
 const updateTodayWeather = () => {
-    var currentrisetime = document.getElementById("rise-time");
-    currentrisetime.textContent = dayjs(weatherToday.sunrise*1000).format("hh:mm A");
-    var currentsettime = document.getElementById("set-time");
-    currentsettime.textContent = dayjs(weatherToday.sunset*1000).format("hh:mm A");
-    var currentcondition = document.getElementById("condition");
-    currentcondition.textContent = `Condition: ${weatherToday.weather[0].main}`;
-    var currenttemperature = document.getElementById("temperature");
-    currenttemperature.textContent = `Temperature: ${weatherToday.temp} °C`;
-    var currentwind = document.getElementById("wind");
-    currentwind.textContent = `Wind: ${weatherToday.wind_speed} km/h`;
-    var currenthumidity = document.getElementById("humidity");
-    currenthumidity.textContent = `Humidity: ${weatherToday.humidity} %`;
+    let currentcondition = document.getElementById("condition");
+    currentcondition.innerHTML = `<span>Condition:</span><span>${weatherToday.weather[0].main}</span>`;
+    let currenttemperature = document.getElementById("temperature");
+    currenttemperature.innerHTML = `<span>Temperature:</span><span>${weatherToday.temp} °C</span>`;
+    let currentwind = document.getElementById("wind");
+    currentwind.innerHTML = `<span>Wind:</span><span>${weatherToday.wind_speed} km/h</span>`;
+    let currenthumidity = document.getElementById("humidity");
+    currenthumidity.innerHTML = `<span>Humidity:</span><span>${weatherToday.humidity} %</span>`;
 };
 
 
@@ -133,20 +146,33 @@ const updateTodayWeather = () => {
 const updateWeeklyWeather = () => {
     //use weather7Day variable
     //update 7 day section
-    var forecastbox = document.querySelector(".day-container");
+    let forecastbox = document.querySelector(".day-container");
     forecastbox.innerHTML = "";
     //update 7 day section
     for (let i=1; i<6; i++) {
         forecastbox.innerHTML +=
-            `<div class="inline-grid p-5 rounded-lg shadow-lg bg-indigo-500 max-w-sm mx-10 w-80 h-90 mt-12 shadow-lg ml-5 mb-3">
-                <h5 class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
-                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Condition: ${weather7Day[i].weather[0].main}</div>
-                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Hightemp: ${weather7Day[i].temp.max} °C</div>
-                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Lowtemp: ${weather7Day[i].temp.min} °C</div>
-                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Windspeed: ${weather7Day[i].wind_speed}km/h</div>
-                <div class="text-gray-200 mb-6 w-40 text-sm whitespace-nowrap">Humidity: ${weather7Day[i].humidity}%</div>
-            </div>`;
+            `<article class="w-full lg:w-auto flex-grow p-5 pt-0 rounded-lg shadow-lg bg-indigo-500">
+                <section class="flex justify-between items-center">
+                    <h3 class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
+                    <img src="http://openweathermap.org/img/wn/${weather7Day[i].weather[0].icon}@2x.png">
+                </section>
+                <section>
+                    <h4 class="text-white font-bold mb-2">Planet</h4>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Rise:</span><span id="rise${i-1}">${riseSetTimes[i-1].rise}</span></div>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Set:</span><span id="set${i-1}">${riseSetTimes[i-1].set}</span></div>
+                </section>
+                <section>
+                    <h4 class="text-white font-bold mb-2">Weather<h4>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Condition:</span> <span>${weather7Day[i].weather[0].main}</span></div>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Hightemp:</span> <span>${weather7Day[i].temp.max} °C</span></div>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Lowtemp:</span> <span>${weather7Day[i].temp.min} °C</span></div>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Windspeed:</span> <span>${weather7Day[i].wind_speed} km/h</span></div>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Humidity:</span> <span>${weather7Day[i].humidity}%</span></div>
+                </section>
+                
+            </article>`;
     }
+
 };
 
 
@@ -157,27 +183,23 @@ const updateWeeklyWeather = () => {
 
 //parent function to handle update of planets
 const updatePlanets = (planet, lat, lng) => {
-    //google elevation API
-    var fnRequestURL = "https://maps.googleapis.com/maps/api/elevation/json?locations="+lat+"%2C"+lng+"&key=AIzaSyBzLHUoT5HXQ28s19821jaSJxj1QBHXhpc";
+    //open elevation API
+    
+    var fnRequestURL = `https://api.open-elevation.com/api/v1/lookup?locations=${lat},${lng}`;
 
     //fetch height
-    fetch(fnRequestURL)
+    return fetch(fnRequestURL)
     .then (function(response){
         return response.json();
     }).then( function(data){
-        //assigning an object variable to the google data object containing elevation
-        var objectData = data.results[0];
-        //aving elevation globally 
-        cityHeight = objectData.elevation;
+        //saving elevation globally 
+        cityHeight = data.results[0].elevation;
         //updating local Storage
         storeLocalUserPrefs('height', cityHeight);
-        return;
-    }).then(() => {
-        //update planet rise and fall times
+
         updateTodayPlanet(planet);
         updateWeeklyPlanet(planet);
     })
-
 };
 
 
@@ -215,6 +237,7 @@ const updateWeeklyPlanet = planet => {
         date.setDate(date.getDate() + i);
         riseSetTimes.push(getRiseSet(planet, observer, date));
     }
+    
 
     return;
 };
@@ -282,7 +305,10 @@ const planetChangeHandler = planet => {
     }
 
     //update planet rise and fall data
-    updatePlanets(selectedPlanet, cityLat, cityLng);
+    let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
+    promise.then(() => {
+        updateWeeklyWeather();
+    })
 }
 
 
@@ -327,6 +353,22 @@ const getLocalUserPrefs = () => {
     return {name: null, lat: null, lng: null, height: null, planet: null, planet_index: null};
 };
 
+//-------------------------------- Navbar -------------------------------------------------------//
+
+const toggleMenu = () => {
+    let status = menuBtn.value;
+
+    if(status === "closed") {
+        menuBtn.value = "open";
+        navLinks.classList.remove('hidden');
+        menuBtnImg.setAttribute('src', './assets/images/icons/menu-close.svg');
+    } else {
+        menuBtn.value = "closed";
+        navLinks.classList.add('hidden');
+        menuBtnImg.setAttribute('src', './assets/images/icons/menu-open.svg');
+    }
+};
+//-------------------------------- Page Initilization -------------------------------------------//
 
 //page initialization of weather and planet values
 const pageInit = () => {
@@ -350,6 +392,7 @@ const pageInit = () => {
         //update the page with new information (weather, rise and fall)
         cityWeatherSearch(selectedCity);
     }
+
 };
 
 
