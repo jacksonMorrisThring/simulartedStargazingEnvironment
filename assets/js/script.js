@@ -47,6 +47,10 @@ let planet_index = 0;
 const riseTimeText = document.querySelector('#rise-time');
 const setTimeText = document.querySelector('#set-time');
 
+//--------------------------------- Google maps Elevation ------------------------------------//
+
+const elevator = new google.maps.ElevationService();
+
 
 //-------------------------------------- Weather API -----------------------------------------//
 
@@ -103,9 +107,11 @@ const getWeather = (name, lat, lng) => {
 
             //update planet data
             let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
+            console.log(promise);
 
             //update weather data
             promise.then(response => {
+                console.log(response);
                 if(response === "success") {
 
                     updateTodayWeather();
@@ -193,20 +199,27 @@ const updateWeeklyWeather = () => {
 const updatePlanets = (planet, lat, lng) => {
     //open elevation API
     
-    var fnRequestURL = `https://api.open-elevation.com/api/v1/lookup?locations=${lat},${lng}`;
+    //var fnRequestURL = `https://api.open-elevation.com/api/v1/lookup?locations=${lat},${lng}`;
 
     //fetch height
-    return fetch(fnRequestURL)
-    .then (function(response){
-        if(response.ok) {
-            return response.json();
+    //return fetch(fnRequestURL)
+    let location = {lat: lat, lng: lng};
+    return elevator.getElevationForLocations({
+      locations: [location],
+    })
+    .then (({ results }) => {
+        console.log(results);
+        if(results[0]) {
+            return results[0].elevation;
         }
-    }).then( function(data){
+    })
+    .then( function(data){
+        console.log(data);
         //saving elevation globally 
-        cityHeight = data.results[0].elevation;
+        cityHeight = data;
         //updating local Storage
         storeLocalUserPrefs('height', cityHeight);
-
+        console.log('sotred user prefs');
         updateTodayPlanet(planet);
         updateWeeklyPlanet(planet);
         return 'success';
@@ -403,6 +416,8 @@ const planetChangeHandler = planet => {
 
     //update planet rise and fall data
     let promise = updatePlanets(selectedPlanet, cityLat, cityLng);
+    console.log('promise from planet change handler ');
+    console.log(promise);
     promise.then(() => {
         updateWeeklyWeather();
     })
@@ -557,3 +572,5 @@ const init = () => {
 
 //listener for page load
 window.addEventListener('load',init);
+
+const initMap = () => {};
