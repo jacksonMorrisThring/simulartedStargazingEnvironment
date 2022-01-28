@@ -119,18 +119,14 @@ const weatherApiFetchErrorHandler = event => {};
 //update weather in today section
 //use weatherToday variable
 const updateTodayWeather = () => {
-    let currentrisetime = document.getElementById("rise-time");
-    currentrisetime.textContent = dayjs(weatherToday.sunrise*1000).format("hh:mm A");
-    let currentsettime = document.getElementById("set-time");
-    currentsettime.textContent = dayjs(weatherToday.sunset*1000).format("hh:mm A");
     let currentcondition = document.getElementById("condition");
-    currentcondition.textContent = `Condition: ${weatherToday.weather[0].main}`;
+    currentcondition.innerHTML = `<span>Condition:</span><span>${weatherToday.weather[0].main}</span>`;
     let currenttemperature = document.getElementById("temperature");
-    currenttemperature.textContent = `Temperature: ${weatherToday.temp} °C`;
+    currenttemperature.innerHTML = `<span>Temperature:</span><span>${weatherToday.temp} °C</span>`;
     let currentwind = document.getElementById("wind");
-    currentwind.textContent = `Wind: ${weatherToday.wind_speed} km/h`;
+    currentwind.innerHTML = `<span>Wind:</span><span>${weatherToday.wind_speed} km/h</span>`;
     let currenthumidity = document.getElementById("humidity");
-    currenthumidity.textContent = `Humidity: ${weatherToday.humidity} %`;
+    currenthumidity.innerHTML = `<span>Humidity:</span><span>${weatherToday.humidity} %</span>`;
 };
 
 
