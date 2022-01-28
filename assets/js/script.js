@@ -190,9 +190,6 @@ const updateWeeklyWeather = () => {
 };
 
 
-
-
-
 //-------------------------------------- Planet Functions ----------------------------------//
 
 //parent function to handle update of planets
@@ -304,7 +301,10 @@ const getOffsetDate = date => {
     return newDate.$d;
 }
 
+
 //--------------------------------------- Save Date -------------------------------------------------------//
+
+//retrievs a unique ID for local storage of dates
 const getUniqueId = () => {
     let id = Math.random();
     let local = getLocalDates();
@@ -320,52 +320,64 @@ const getUniqueId = () => {
 
 const createCard = (weather, icon, rise, set, date, planet, city, id) => {
 
+    //create article -> parent element
     let article = document.createElement('article');
     article.className = 'flex flex-col gap-4 w-full lg:w-auto flex-grow p-5 pt-0 rounded-lg shadow-lg bg-indigo-500';
     article.setAttribute('id', `${id}`);
 
+    //date container
     let dateHeader = document.createElement('section');
     dateHeader.className = 'flex justify-between items-center';
 
+    //date text -> date container child
     let dateText = document.createElement('h3');
     dateText.className = 'text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap';
     dateText.innerText = date;
 
+    //weather img -> date container child
     let weatherImg = document.createElement('img');
     weatherImg.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
 
-    
-    let planetDiv = document.createElement('p');
-    planetDiv.className = 'flex justify-between text-gray-200';
-    planetDiv.innerHTML = `<span>Planet:</span><span>${planet}</span>`;
-
+    //holds location status -> article child
     let locationDiv = document.createElement('p');
     locationDiv.className = 'flex justify-between text-gray-200';
     locationDiv.innerHTML = `<span>Location:</span><span>${city}</span>`;
 
+    //holds weather status -> article child
     let weatherDiv = document.createElement('p');
     weatherDiv.className = 'flex justify-between text-gray-200';
     weatherDiv.innerHTML = `<span>Condition:</span><span>${weather}</span>`;
 
+    //holds planet status -> article child
+    let planetDiv = document.createElement('p');
+    planetDiv.className = 'flex justify-between text-gray-200';
+    planetDiv.innerHTML = `<span>Planet:</span><span>${planet}</span>`;
+
+    //holds planet rise time -> article child
     let riseDiv = document.createElement('p');
     riseDiv.className = 'flex justify-between text-gray-200';
     riseDiv.innerHTML = `<span>Rise:</span><span>${rise}</span>`;
 
+    //holds planet set time -> article child
     let setDiv = document.createElement('p');
     setDiv.className = 'flex justify-between text-gray-200';
     setDiv.innerHTML = `<span>Set:</span><span>${set}</span>`;
 
+    //delete button -> article child
     let deleteButton = document.createElement('button');
     deleteButton.className = 'w-full mt-8 py-2 bg-slate-600 text-white rounded-lg hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out'
     deleteButton.setAttribute('onClick', 'deleteCard(this)');
     deleteButton.innerText = 'Delete';
 
+    //appending children to appropriate parent
     dateHeader.append(dateText, weatherImg);
     article.append(dateHeader, locationDiv, weatherDiv, planetDiv, riseDiv, setDiv, deleteButton);
 
+    //return completed article card
     return article;
 };
 
+//deletes the card
 const deleteCard = target => {
     console.log(target.parentElement.id);
     let id = target.parentElement.id;
@@ -373,8 +385,10 @@ const deleteCard = target => {
     target.parentNode.remove();
 };
 
+//creates a card for saved date -> appends to page -> stores to local storage
 const saveDate = target => {
     
+    //get all need data
     let parent = target.parentNode.parentNode;
     let card = parent.dataset.cardNumber;
     let weather = document.querySelector(`#condition${card}`).innerText;
@@ -383,14 +397,17 @@ const saveDate = target => {
     let date = document.querySelector(`#date${card}`).innerText;
     let icon = document.querySelector(`#icon${card}`).dataset.icon;
     
+    //get unique id
     let id = getUniqueId();
-    console.log(id);
 
+    //create a new card and append to page
     let newCard = createCard(weather, icon, rise, set, date, selectedPlanet, selectedCity, id);
     savedDates.append(newCard);
 
+    //store date in local storage
     storeLocalDates(weather, icon, rise, set, date, selectedPlanet, selectedCity, id);
 };
+
 
 //--------------------------------------- Form Handlers ---------------------------------------------------//
 
@@ -506,8 +523,10 @@ const removeFromLocalDates = id => {
     return;
 };
 
+
 //-------------------------------- Navbar -------------------------------------------------------//
 
+//toggle nav menu in mobile
 const toggleMenu = () => {
     let status = menuBtn.value;
 
@@ -521,6 +540,8 @@ const toggleMenu = () => {
         menuBtnImg.setAttribute('src', './assets/images/icons/menu-open.svg');
     }
 };
+
+
 //-------------------------------- Page Initilization -------------------------------------------//
 
 //page initialization of weather and planet values
@@ -573,4 +594,4 @@ const init = () => {
 //listener for page load
 window.addEventListener('load',init);
 
-const initMap = () => {};
+const initMap = () => {}; //was here for error stuff but seems to be not needed -> will discard soon
