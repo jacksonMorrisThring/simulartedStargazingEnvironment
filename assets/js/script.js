@@ -3,6 +3,7 @@
 //Page Sections
 const todaySection = document.querySelector('#results-today-nav');
 const weeklySection = document.querySelector('#day-nav');
+const savedDates = document.querySelector('.saved-dates');
 
 //Navbar elements
 const menuBtn = document.querySelector('#menu-toggle');
@@ -105,12 +106,17 @@ const getWeather = (name, lat, lng) => {
             console.log(promise);
 
             //update weather data
-            promise.then(() => {
-                updateTodayWeather();
-                updateWeeklyWeather();
+            promise.then(response => {
+                if(response === "success") {
 
-                todaySection.classList.remove('hidden');
-                weeklySection.classList.remove('hidden');
+                    updateTodayWeather();
+                    updateWeeklyWeather();
+
+                    todaySection.classList.remove('hidden');
+                    weeklySection.classList.remove('hidden');
+                } else {
+                    console.log('please try again');
+                }
             });
             
 
@@ -151,10 +157,10 @@ const updateWeeklyWeather = () => {
     //update 7 day section
     for (let i=1; i<6; i++) {
         forecastbox.innerHTML +=
-            `<article class="w-full lg:w-auto flex-grow p-5 pt-0 rounded-lg shadow-lg bg-indigo-500">
+            `<article class="w-full lg:w-auto flex-grow p-5 pt-0 rounded-lg shadow-lg bg-indigo-500" data-card-number="${i-1}">
                 <section class="flex justify-between items-center">
-                    <h3 class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
-                    <img src="http://openweathermap.org/img/wn/${weather7Day[i].weather[0].icon}@2x.png">
+                    <h3 id="date${i-1}" class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
+                    <img id="icon${i-1}" data-icon="${weather7Day[i].weather[0].icon}" src="http://openweathermap.org/img/wn/${weather7Day[i].weather[0].icon}@2x.png">
                 </section>
                 <section>
                     <h4 class="text-white font-bold mb-2">Planet</h4>
@@ -163,11 +169,14 @@ const updateWeeklyWeather = () => {
                 </section>
                 <section>
                     <h4 class="text-white font-bold mb-2">Weather<h4>
-                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Condition:</span> <span>${weather7Day[i].weather[0].main}</span></div>
+                    <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Condition:</span> <span id="condition${i-1}">${weather7Day[i].weather[0].main}</span></div>
                     <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Hightemp:</span> <span>${weather7Day[i].temp.max} °C</span></div>
                     <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Lowtemp:</span> <span>${weather7Day[i].temp.min} °C</span></div>
                     <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Windspeed:</span> <span>${weather7Day[i].wind_speed} km/h</span></div>
                     <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Humidity:</span> <span>${weather7Day[i].humidity}%</span></div>
+                </section>
+                <section>
+                    <button class="w-full py-2 bg-slate-600 text-white rounded-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" onClick="saveDate(this)">Save Date</button>
                 </section>
                 
             </article>`;
@@ -190,7 +199,9 @@ const updatePlanets = (planet, lat, lng) => {
     //fetch height
     return fetch(fnRequestURL)
     .then (function(response){
-        return response.json();
+        if(response.ok) {
+            return response.json();
+        }
     }).then( function(data){
         //saving elevation globally 
         cityHeight = data.results[0].elevation;
@@ -199,6 +210,9 @@ const updatePlanets = (planet, lat, lng) => {
 
         updateTodayPlanet(planet);
         updateWeeklyPlanet(planet);
+        return 'success';
+    }).catch(() => {
+        return 'failed';
     })
 };
 
@@ -280,7 +294,94 @@ const getOffsetDate = date => {
     return newDate.$d;
 }
 
+//--------------------------------------- Save Date -------------------------------------------------------//
+const getUniqueId = () => {
+    let id = Math.random();
+    let local = getLocalDates();
 
+    local.forEach(element => {
+        if(element.id === id) {
+            return getUniqueId();
+        }
+    });
+
+    return id;
+}
+
+const createCard = (weather, icon, rise, set, date, planet, city, id) => {
+
+    let article = document.createElement('article');
+    article.className = 'flex flex-col gap-4 w-full lg:w-auto flex-grow p-5 pt-0 rounded-lg shadow-lg bg-indigo-500';
+    article.setAttribute('id', `${id}`);
+
+    let dateHeader = document.createElement('section');
+    dateHeader.className = 'flex justify-between items-center';
+
+    let dateText = document.createElement('h3');
+    dateText.className = 'text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap';
+    dateText.innerText = date;
+
+    let weatherImg = document.createElement('img');
+    weatherImg.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
+
+    
+    let planetDiv = document.createElement('p');
+    planetDiv.className = 'flex justify-between text-gray-200';
+    planetDiv.innerHTML = `<span>Planet:</span><span>${planet}</span>`;
+
+    let locationDiv = document.createElement('p');
+    locationDiv.className = 'flex justify-between text-gray-200';
+    locationDiv.innerHTML = `<span>Location:</span><span>${city}</span>`;
+
+    let weatherDiv = document.createElement('p');
+    weatherDiv.className = 'flex justify-between text-gray-200';
+    weatherDiv.innerHTML = `<span>Condition:</span><span>${weather}</span>`;
+
+    let riseDiv = document.createElement('p');
+    riseDiv.className = 'flex justify-between text-gray-200';
+    riseDiv.innerHTML = `<span>Rise:</span><span>${rise}</span>`;
+
+    let setDiv = document.createElement('p');
+    setDiv.className = 'flex justify-between text-gray-200';
+    setDiv.innerHTML = `<span>Set:</span><span>${set}</span>`;
+
+    let deleteButton = document.createElement('button');
+    deleteButton.className = 'w-full mt-8 py-2 bg-slate-600 text-white rounded-lg hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out'
+    deleteButton.setAttribute('onClick', 'deleteCard(this)');
+    deleteButton.innerText = 'Delete';
+
+    dateHeader.append(dateText, weatherImg);
+    article.append(dateHeader, locationDiv, weatherDiv, planetDiv, riseDiv, setDiv, deleteButton);
+
+    return article;
+};
+
+const deleteCard = target => {
+    console.log(target.parentElement.id);
+    let id = target.parentElement.id;
+    removeFromLocalDates(id);
+    target.parentNode.remove();
+};
+
+const saveDate = target => {
+    
+    let parent = target.parentNode.parentNode;
+    let card = parent.dataset.cardNumber;
+    let weather = document.querySelector(`#condition${card}`).innerText;
+    let rise = document.querySelector(`#rise${card}`).innerText;
+    let set = document.querySelector(`#set${card}`).innerText;
+    let date = document.querySelector(`#date${card}`).innerText;
+    let icon = document.querySelector(`#icon${card}`).dataset.icon;
+    console.log(icon);
+    
+    let id = getUniqueId();
+    console.log(id);
+
+    let newCard = createCard(weather, icon, rise, set, date, selectedPlanet, selectedCity, id);
+    savedDates.append(newCard);
+
+    storeLocalDates(weather, icon, rise, set, date, selectedPlanet, selectedCity, id);
+};
 
 //--------------------------------------- Form Handlers ---------------------------------------------------//
 
@@ -353,6 +454,47 @@ const getLocalUserPrefs = () => {
     return {name: null, lat: null, lng: null, height: null, planet: null, planet_index: null};
 };
 
+
+//store date to local storage
+const storeLocalDates = (weather, icon, rise, set, date, planet, city, id) => {
+    //get from local storage
+    let local = getLocalDates();
+    //push date
+    local.push({weather: weather, icon: icon, rise: rise, set: set, date: date, planet: planet, city: city, id: id})
+    //store to local storage
+    local = JSON.stringify(local);
+    localStorage.setItem('savedDates', local);
+};
+
+
+//get saved dates from local storage
+const getLocalDates = () => {
+    let local = JSON.parse(localStorage.getItem('savedDates'));
+
+    if(local) {
+        return local;
+    }
+
+    return [];
+};
+
+
+//remove date from local storage
+const removeFromLocalDates = id => {
+    let local = getLocalDates();
+
+    for(let i = 0; i < local.length; i++) {
+        if(local[i].id == id) {
+            local.splice(i, 1);
+            break;
+        }
+    }
+    
+    localStorage.setItem('savedDates', JSON.stringify(local));
+
+    return;
+};
+
 //-------------------------------- Navbar -------------------------------------------------------//
 
 const toggleMenu = () => {
@@ -373,24 +515,38 @@ const toggleMenu = () => {
 //page initialization of weather and planet values
 const pageInit = () => {
     //get local storage data
-    let local = getLocalUserPrefs();
+    let prefs = getLocalUserPrefs();
+    let dates = getLocalDates();
 
     //if all needed data is initialized
-    if((local['lat'] != null) && (local['planet'] != null)) {
+    if((prefs['lat'] != null) && (prefs['planet'] != null)) {
 
         //use local data to update current global values
-        selectedCity = local.name;
-        cityLat = local.lat;
-        cityLng = local.lng;
-        selectedPlanet = local.planet;
-        planet_index = local.planet_index;
-        cityHeight = local.height;
+        selectedCity = prefs.name;
+        cityLat = prefs.lat;
+        cityLng = prefs.lng;
+        selectedPlanet = prefs.planet;
+        planet_index = prefs.planet_index;
+        cityHeight = prefs.height;
 
         //set carousel to the correct planet
         flkty.select( planet_index );
 
         //update the page with new information (weather, rise and fall)
         cityWeatherSearch(selectedCity);
+    }
+
+    //if there are any saved dates
+    if(dates.length > 0) {
+        //create document fragment
+        const fragment = new DocumentFragment();
+        //iterate through dates and create a card for each of them and append to fragment
+        for(let i = 0; i < dates.length; i++) {
+            let card = createCard(dates[i].weather, dates[i].icon, dates[i].rise, dates[i].set, dates[i].date, dates[i].planet, dates[i].city, dates[i].id);
+            fragment.append(card);
+        }
+        //append fragment to page
+        savedDates.append(fragment);
     }
 
 };
