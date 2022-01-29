@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon link -> don't have one atm-->
+    <link rel="shortcut icon" type="image/jpg" href="#"/>
 
     <!-- --------------------------------Stylesheets-------------------------------- -->
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
@@ -23,18 +25,19 @@
 <body class="bg-indigo-900">
     <header>
         <!-- --------------------------------Navigation-------------------------------- -->
-        <nav class="sticky w-full flex flex-col lg:flex-row items-center justify-between py-4 px-5 bg-gradient-to-r from-slate-900 to-blue-900 text-white hover:text-gray-100 focus:text-gray-100 shadow-lg navbar navbar-expand-lg navbar-light" style="font-family: 'Space Mono';">
-            <section class="flex justify-between items-center w-full sm:w-auto">
+        <nav class="sticky w-full flex flex-col xl:flex-row items-center justify-between py-4 px-5 bg-gradient-to-r from-slate-900 to-blue-900 text-white hover:text-gray-100 focus:text-gray-100 shadow-lg navbar navbar-expand-lg navbar-light" style="font-family: 'Space Mono';">
+            <section class="flex justify-between items-center w-full md:w-auto">
                 <p class="text-3xl ">Stargazing Simulation</p>
-                <button id="menu-toggle" class="sm:hidden ml-2" onClick="toggleMenu()" value="closed"><img id="menu-toggle-img" src="./assets/images/icons/menu-open.svg" alt="open mobile menu"></button>
+                <button id="menu-toggle" class="md:hidden ml-2" onClick="toggleMenu()" value="closed"><img id="menu-toggle-img" src="./assets/images/icons/menu-open.svg" alt="open mobile menu"></button>
             </section>
             
                 
-            <section id="nav-links" class="hidden sm:block">
-              <ul class="text-center flex flex-col sm:flex-row justify-between gap-2 sm:gap-12 mt-6 lg:mt-0">
+            <section id="nav-links" class="hidden md:block">
+              <ul class="text-center flex flex-col sm:flex-row justify-between gap-2 sm:gap-12 mt-6 xl:mt-0">
                 <li class="hover:text-blue-600 hover:font-bold"><a href="#planet-selector-nav">PLANET SELECTOR</a></li>
                 <li class="hover:text-blue-600 hover:font-bold"><a href="#results-today-nav">TODAY'S RESULTS</a></li>
                 <li class="hover:text-blue-600 hover:font-bold"><a href="#day-nav">WEEKLY RESULTS</a></li>
+                <li class="hover:text-blue-600 hover:font-bold"><a href="#dates-nav">SAVED EVENTS</a></li>
               </ul>
             </section>
           </nav>
@@ -133,9 +136,12 @@
             </div>
         </section>
 
-        <!-- --------------------------------planets visible today-------------------------------- -->
-        <section class="planets-visible-container">
+        <!-- saved dates -->
+        <section id="dates-nav" class="saved-dates-container m-5 mt-8">
+            <h2 class="text-white text-2xl font-bold">Saved Dates</h2>
+            <section class="saved-dates flex flex-wrap flex-col lg:flex-row gap-4 mt-8">
 
+            </section>
         </section>
     </main>
     <footer>
@@ -143,6 +149,7 @@
     </footer>
 
     <!-- --------------------------------Scripts-------------------------------- -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9_Hwila4HqG-J434rRupUsJho4lAsYtE"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.10.7/dayjs.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.7/plugin/utc.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.7/plugin/timezone.js"></script>
