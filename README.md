@@ -12,27 +12,34 @@ I WANT to be able to know if its the
 -> right weather
 SO THAT I can know if I can make an observation of a planet on a particular night
 ```
-<<<<<<< HEAD
 
-=======
->>>>>>> d503b2be45b6be85abac5dc62d67a367e58d2160
 ## About The Project
-Users can find out what planets are visible, and available to view. UI allows users to type in a planet. Weather and planet visibility is checked to ensure visibility. DARK/LIGHT mode for when your out in the field at night
+Users can find out what planets are visible, and available to view. UI allows users to type in a location and select a planet. From there a user can see the rise and set times for the planets in their area as well as the weather, to decide when to plan their astronomy adventures.
 
 ### Built with:
-This section should list any major frameworks/libraries used to bootstrap your project. List APIs used
+Styling
+* [Tailwind css framework](https://tailwindcss.com/)
+
+Js libraries
+* [Day.js](https://day.js.org/)
+* [Flickity.js](https://flickity.metafizzy.co/)
+* [Astronomy Engine](https://github.com/cosinekitty/astronomy)
+
+Server Side API’s
+* [OpenWeatherMap](https://openweathermap.org/)
+* [Google Maps API Elevation service](https://developers.google.com/maps/documentation/elevation/overview)
+
 
 ## Getting Started
 This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps
 
-<<<<<<< HEAD
-## Usage
+
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources
 
 ## Contacts
 or credits can be added here 
 
-=======
+
 ### Instructions:
 * Navigate to planet you want to observe
 * program checks planets availability (rise/fall time + seasonal availability)
@@ -64,4 +71,3 @@ For commenting on specific subsections, commenting will be done above the sectio
 * Matthew Durflinger 
 
 * Jackson Morris-Thring
->>>>>>> d503b2be45b6be85abac5dc62d67a367e58d2160
