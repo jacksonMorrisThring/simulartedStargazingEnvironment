@@ -164,7 +164,7 @@ const updateWeeklyWeather = () => {
             `<article class="w-full lg:w-auto flex-grow p-5 pt-0 rounded-lg shadow-lg bg-indigo-500" data-card-number="${i-1}">
                 <section class="flex justify-between items-center">
                     <h3 id="date${i-1}" class="text-white text-xl leading-tight font-medium mb-2 text-bold whitespace-nowrap">${dayjs(weather7Day[i].dt*1000).format("ddd")} ${dayjs(weather7Day[i].dt*1000).format("MMM D, YYYY")} </h5>
-                    <img id="icon${i-1}" data-icon="${weather7Day[i].weather[0].icon}" src="http://openweathermap.org/img/wn/${weather7Day[i].weather[0].icon}@2x.png">
+                    <img id="icon${i-1}" class="-mr-5" data-icon="${weather7Day[i].weather[0].icon}" src="http://openweathermap.org/img/wn/${weather7Day[i].weather[0].icon}@2x.png">
                 </section>
                 <section>
                     <h4 class="text-white font-bold mb-2">Planet</h4>
@@ -332,6 +332,7 @@ const createCard = (weather, icon, rise, set, date, planet, city, id) => {
 
     //weather img -> date container child
     let weatherImg = document.createElement('img');
+    weatherImg.className = '-mr-5'
     weatherImg.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
 
     //holds location status -> article child
