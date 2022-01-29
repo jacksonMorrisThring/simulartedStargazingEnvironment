@@ -20,7 +20,8 @@ let selectedCity = null; //user selected city
 let cityLat = null;
 let cityLng = null;
 let cityHeight = null;
-let weatherToday, weather7Day; //weather data holders
+let weatherToday;
+let weather7Day = []; //weather data holders
 let timezone;
 let offset;
 let riseSetTimes = [];
@@ -553,11 +554,11 @@ const pageInit = () => {
         planet_index = prefs.planet_index;
         cityHeight = prefs.height;
 
-        //set carousel to the correct planet
-        flkty.select( planet_index );
-
         //update the page with new information (weather, rise and fall)
-        cityWeatherSearch(selectedCity);
+        let promise = cityWeatherSearch(selectedCity);
+
+        //set carousel to the correct planet
+        promise.then(() => {flkty.select( planet_index )});
     }
 
     //if there are any saved dates
