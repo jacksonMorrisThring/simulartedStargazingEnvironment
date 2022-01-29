@@ -441,7 +441,6 @@ const planetChangeHandler = planet => {
 var flkty = new Flickity(".main-carousel", {
     // options
     wrapAround: true,
-    adaptiveHeight: true,
     on: {
         change: (index) => {
             planetChangeHandler(index);
