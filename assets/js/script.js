@@ -3,6 +3,7 @@
 //Page Sections
 const todaySection = document.querySelector('#results-today-nav');
 const weeklySection = document.querySelector('#day-nav');
+const savedDatesContainer = document.querySelector('#dates-nav');
 const savedDates = document.querySelector('.saved-dates');
 
 //Navbar elements
@@ -47,6 +48,9 @@ let planet_index = 0;
 //today Planet set and rise text
 const riseTimeText = document.querySelector('#rise-time');
 const setTimeText = document.querySelector('#set-time');
+
+//carousel referrence variable -> will be initialized in function
+let flkty;
 
 //--------------------------------- Google maps Elevation ------------------------------------//
 
@@ -180,7 +184,7 @@ const updateWeeklyWeather = () => {
                     <div class="flex justify-between text-gray-200 mb-6 text-sm"><span>Humidity:</span> <span>${weather7Day[i].humidity}%</span></div>
                 </section>
                 <section>
-                    <button class="w-full py-2 bg-slate-600 text-white rounded-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" onClick="saveDate(this)">Save Date</button>
+                    <button class="w-full py-2 bg-slate-600 text-white rounded-lg hover:bg-blue-700 hover:shadow-lg  active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" onClick="saveDate(this)">Save Date</button>
                 </section>
                 
             </article>`;
@@ -402,6 +406,7 @@ const saveDate = target => {
 
     //store date in local storage
     storeLocalDates(weather, icon, rise, set, date, selectedPlanet, selectedCity, id);
+    savedDatesContainer.classList.remove('hidden');
 };
 
 
@@ -438,17 +443,17 @@ const planetChangeHandler = planet => {
 //--------------------------------------------- Planet Carousel -------------------------------------------------//
 
 //planet carousel
-var flkty = new Flickity(".main-carousel", {
-    // options
-    wrapAround: true,
-    on: {
-        change: (index) => {
-            planetChangeHandler(index);
+window.addEventListener('load', () => {
+    flkty = new Flickity(".main-carousel", {
+        // options
+        wrapAround: true,
+        on: {
+            change: (index) => {
+                planetChangeHandler(index);
+            },
         },
-    },
+    });
 });
-
-
 
 //----------------------------------------------- Local Storage ------------------------------------------------//
 
@@ -572,6 +577,7 @@ const pageInit = () => {
         }
         //append fragment to page
         savedDates.append(fragment);
+        savedDatesContainer.classList.remove('hidden');
     }
 
 };

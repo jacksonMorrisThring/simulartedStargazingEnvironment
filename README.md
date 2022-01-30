@@ -31,25 +31,32 @@ Server Side API’s
 
 
 ## Getting Started
-This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps
 
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources
+Local Copy is ready to go. Just grab a copy of the repository and open index.html on your local host.
 
 ## Contacts
-or credits can be added here 
+
+* Gan Hong
+
+* Angelika Amor 
+
+* Matthew Durflinger 
+
+* Jackson Morris-Thring
 
 
 ### Instructions:
+* Enter your city, or city where you plan to do your planet viewing
 * Navigate to planet you want to observe
 * program checks planets availability (rise/fall time + seasonal availability)
 * program checks weather
-* if all of the above passes, will list as available. Otherwise it will display and appropriate error message
+* if all of the above passes, will list as available. Otherwise it will display an appropriate error message.
 
-## Usage
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources
+## Usage 
 
-## style
+![Demo](./assets/demo/demo.gif)
+
+## Style
 We decided as a group to align our style of writing code. We decided ES6 styling for the body. We also decided to unify our commenting styling. For major sections, we will have styling in the form
 
 //----------------- Section header -----------------//
