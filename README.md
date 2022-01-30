@@ -36,13 +36,13 @@ Local Copy is ready to go. Just grab a copy of the repository and open index.htm
 
 ## Contacts
 
-* Gan Hong
+* Gan Hong: [github](https://github.com/Hongnodie)
 
-* Angelika Amor 
+* Angelika Amor: [github](http://github.com/angelikaamorxo)
 
-* Matthew Durflinger 
+* Matthew Durflinger: [github](https://github.com/mattyd96)
 
-* Jackson Morris-Thring
+* Jackson Morris-Thring: [github](https://github.com/jacksonMorrisThring)
 
 
 ### Instructions:
@@ -69,12 +69,17 @@ For commenting on specific subsections, commenting will be done above the sectio
         set = Astronomy.SearchRiseSet(planet, observer, -1, date ,1);
     }
 
+## Links
+
+
+[Live Website](https://jacksonmorristhring.github.io/simulartedStargazingEnvironment/)
+
 ## Credits
 
-* Gan Hong
+* Gan Hong: [github](https://github.com/Hongnodie)
 
-* Angelika Amor 
+* Angelika Amor: [github](http://github.com/angelikaamorxo)
 
-* Matthew Durflinger 
+* Matthew Durflinger: [github](https://github.com/mattyd96)
 
-* Jackson Morris-Thring
+* Jackson Morris-Thring: [github](https://github.com/jacksonMorrisThring)
